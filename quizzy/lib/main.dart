@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home/home.dart';
+import 'package:quizzy/home/home.dart';
+import 'welcome/welcome.dart';
+import 'login/login.dart';   
+import 'signup/signup.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +20,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const WelcomePage(),
+
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignUpPage(),
+        '/home': (context) => const HomePage(),
+      },
     );
   }
 }
