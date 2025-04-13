@@ -7,7 +7,9 @@ class AppColors {
   static const dynamicOrange= Color(0xFFFA8900);
   static const lightGrey = Color(0xFFEAEAEA);
 
-  // Linear gradient from left to right
+  static const Color purpleWithOpacity = Color(0x8E5B19A0);
+
+  // Linear gradient left to right
   static LinearGradient get gradientLTR => const LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
@@ -18,7 +20,7 @@ class AppColors {
     ],
   );
 
-  // Linear gradient from right to left
+  // Linear gradient right to left
   static LinearGradient get gradientRTL => const LinearGradient(
     begin: Alignment.centerRight,
     end: Alignment.centerLeft,
@@ -28,7 +30,15 @@ class AppColors {
       Color(0xFF5B19A0),
     ],
   );
+
+  // Box shadow 
+  static final BoxShadow purpleBoxShadow = BoxShadow(
+    color: purpleWithOpacity,
+    offset: const Offset(0, 2),
+    blurRadius: 4,
+  );
 }
+
 // Simple colors
 /*
   import 'package:your_app/core/constants/app_colors.dart';
@@ -41,7 +51,7 @@ class AppColors {
 // Gradient
 /* 
   import 'package:your_app/core/constants/app_colors.dart';
-  
+
   Container(
     decoration: BoxDecoration(
       gradient: AppColors.orangeToPurpleLTR,
