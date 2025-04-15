@@ -160,7 +160,7 @@ class SignUpPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: const Text(
-                          "Inscription",
+                          "Sign Up",
                           style: TextStyle(
                             fontFamily: AppFonts.lato,
                             fontSize: 20,
@@ -205,7 +205,7 @@ class SignUpPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: const Text(
-                          "Connexion",
+                          "Login",
                           style: TextStyle(
                             fontFamily: AppFonts.lato,
                             fontSize: 20,

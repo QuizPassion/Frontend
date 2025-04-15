@@ -139,7 +139,7 @@ class LoginPage extends StatelessWidget {
 
                 // Login
                 const Text(
-                  "Don't have an account ? Sign up here",
+                  "Don't have an account ? Sign Up here",
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 16,
@@ -168,7 +168,7 @@ class LoginPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: const Text(
-                          "SignUp",
+                          "Sign Up",
                           style: TextStyle(
                             fontFamily: AppFonts.lato,
                             fontSize: 20,
