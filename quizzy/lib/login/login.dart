@@ -29,66 +29,73 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 // Email
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Email",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.lato,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
+                // Email
                 SizedBox(
                   width: 300,
-                  height: 40,
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: "fan2StarWars@gmail.com",
-                      filled: true,
-                      fillColor: AppColors.lightGrey,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Email",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.lato,
+                          fontSize: 20,
+                        ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                    ),
+                      SizedBox(height: 8),
+                      SizedBox(
+                        height: 40,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "fan2StarWars@gmail.com",
+                            filled: true,
+                            fillColor: AppColors.lightGrey,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                // Password
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Password",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: AppFonts.lato,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
+                // Password 
                 SizedBox(
                   width: 300,
-                  height: 40,
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "************",
-                      filled: true,
-                      fillColor: AppColors.lightGrey,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Password",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.lato,
+                          fontSize: 20,
+                        ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                    ),
+                      SizedBox(height: 8),
+                      SizedBox(
+                        height: 40,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "************",
+                            filled: true,
+                            fillColor: AppColors.lightGrey,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
