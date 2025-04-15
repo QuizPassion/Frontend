@@ -4,7 +4,7 @@ import '../core/app_fonts.dart';
 import '../core/widgets/app_bar.dart';
 import '../core/widgets/background_decoration.dart';
 import '../core/widgets/nav_bar.dart';
-// import 'package:flutter_svg/flutter_svg.dart'; // Si tu utilises des icônes SVG
+import '../core/widgets/quizzy_text_field.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,122 +21,104 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // ==== MULTIJOUEUR ====
                 const Text(
-                  'Multijoueurs',
+                  'Multiplayer',
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.lightGrey,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Barre recherche de partie avec QR
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 40,
+                // join game search bar
+                SizedBox(
+                  width: 350,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: QuizzyTextField(
+                          hintText: 'Search and join a game',
+                          height: 42,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Container(
+                        height: 42,
+                        width: 42,
                         decoration: BoxDecoration(
                           border: Border.all(color: AppColors.deepLavender),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        alignment: Alignment.centerLeft,
-                        child: const Text(
-                          'Rechercher une partie',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppFonts.lato,
-                          ),
-                        ),
+                        child: const Icon(Icons.qr_code, color: AppColors.lightGrey),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.deepLavender),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(Icons.qr_code, color: Colors.white),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+
+
                 const SizedBox(height: 16),
                 const Text(
                   'ou',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                    color: AppColors.lightGrey,
+                    fontSize: 18,
                     fontFamily: AppFonts.lato,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Bouton créer une partie
+                // create game btn
                 SizedBox(
-                  width: double.infinity,
+                  width: 350,
+                  height: 42,
                   child: ElevatedButton.icon(
                     onPressed: () {},
-                    icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+                    icon: const Icon(
+                      Icons.add_circle_outline,
+                      color: AppColors.lightGrey,
+                      size: 26, 
+                    ),
                     label: const Text(
-                      'Crée ta propre partie',
+                      'Create your own game',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontFamily: AppFonts.lato,
-                        color: Colors.white,
+                        color: AppColors.lightGrey,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.royalPurple,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(5),
                       ),
+                      elevation: 0,
+                      minimumSize: const Size(350, 42),
                     ),
                   ),
                 ),
 
                 const SizedBox(height: 32),
 
-                // ==== SOLO ====
                 const Text(
                   'Solo',
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.lightGrey,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                // Barre recherche quiz
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.deepLavender),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.search, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        'Rechercher un quiz',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: AppFonts.lato,
-                        ),
-                      ),
-                    ],
-                  ),
+                // search quizz search bar
+                QuizzyTextField(
+                  hintText: 'Search for a quiz',
+                  prefixIcon: Icons.search,
+                  // width: 350,
+                  height: 42,
                 ),
               ],
             ),
@@ -146,7 +128,6 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: QuizzyNavBar(
         currentIndex: 0,
         onTap: (index) {
-          // Handle nav tap
         },
       ),
     );
