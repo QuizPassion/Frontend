@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../core/app_colors.dart';
-import '../core/app_fonts.dart';
-import '../core/widgets/background_decoration.dart';
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+import '../../core/app_colors.dart';
+import '../../core/app_fonts.dart';
+import '../../core/widgets/background_decoration.dart';
+
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class LoginPage extends StatelessWidget {
               children: [
                 // Title
                 const Text(
-                  "Login",
+                  "Sign Up",
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
                     color: Colors.white,
@@ -28,7 +29,43 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
 
-                // Email
+                // Username
+                SizedBox(
+                  width: 300,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Username",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: AppFonts.lato,
+                          fontSize: 20,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      SizedBox(
+                        height: 40,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "Fan2StarWars",
+                            filled: true,
+                            fillColor: AppColors.lightGrey,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+                const SizedBox(height: 20),
+
                 // Email
                 SizedBox(
                   width: 300,
@@ -123,7 +160,7 @@ class LoginPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: const Text(
-                          "Login",
+                          "Sign Up",
                           style: TextStyle(
                             fontFamily: AppFonts.lato,
                             fontSize: 20,
@@ -139,7 +176,7 @@ class LoginPage extends StatelessWidget {
 
                 // Login
                 const Text(
-                  "Don't have an account ? Sign Up here",
+                  "Already have an account ? Login here",
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 16,
@@ -158,7 +195,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup');
+                      Navigator.pushNamed(context, '/login');
                     },
                     child: Ink(
                       decoration: BoxDecoration(
@@ -168,7 +205,7 @@ class LoginPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.center,
                         child: const Text(
-                          "Sign Up",
+                          "Login",
                           style: TextStyle(
                             fontFamily: AppFonts.lato,
                             fontSize: 20,
