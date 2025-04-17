@@ -21,9 +21,7 @@ class QuizzyNavBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.anthraciteBlack,
         boxShadow: [
-          AppColors.purpleBoxShadow.copyWith(
-            offset: const Offset(0, -2),
-          ),
+          AppColors.purpleBoxShadow.copyWith(offset: const Offset(0, -2)),
         ],
       ),
       child: Row(
@@ -34,28 +32,48 @@ class QuizzyNavBar extends StatelessWidget {
             label: 'Home',
             index: 0,
             currentIndex: currentIndex,
-            onTap: onTap,
+            onTap: (i) {
+              if (i != currentIndex) {
+                Navigator.pushReplacementNamed(context, '/home');
+                onTap(i);
+              }
+            },
           ),
           _NavBarItem(
             icon: Icons.add_circle_outline,
-            label: 'Create quizz',
+            label: 'Create Quizz',
             index: 1,
             currentIndex: currentIndex,
-            onTap: onTap,
+            onTap: (i) {
+              if (i != currentIndex) {
+                Navigator.pushReplacementNamed(context, '/allQuiz');
+                onTap(i);
+              }
+            },
           ),
           _NavBarItem(
             icon: Icons.emoji_events,
             label: 'Score',
             index: 2,
             currentIndex: currentIndex,
-            onTap: onTap,
+            onTap: (i) {
+              if (i != currentIndex) {
+                Navigator.pushReplacementNamed(context, '/score');
+                onTap(i);
+              }
+            },
           ),
           _NavBarItem(
             icon: Icons.settings,
             label: 'Parameters',
             index: 3,
             currentIndex: currentIndex,
-            onTap: onTap,
+            onTap: (i) {
+              if (i != currentIndex) {
+                Navigator.pushReplacementNamed(context, '/parameters');
+                onTap(i);
+              }
+            },
           ),
         ],
       ),
@@ -80,23 +98,24 @@ class _NavBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isSelected = index == currentIndex;
+    final color = isSelected ? AppColors.deepLavender : AppColors.lightGrey;
+    final fontWeight = isSelected ? FontWeight.bold : FontWeight.normal;
+
     return GestureDetector(
       onTap: () => onTap(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: AppColors.lightGrey,
-            size: 28,
-          ),
+          Icon(icon, color: color, size: isSelected ? 32 : 28),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: AppFonts.lato,
               fontSize: 15,
-              color: AppColors.lightGrey,
+              fontWeight: fontWeight,
+              color: color,
             ),
           ),
         ],
