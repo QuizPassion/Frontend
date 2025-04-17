@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Login",
+                  "Connexion",
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
                     color: Colors.white,

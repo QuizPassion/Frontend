@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quizzy/data/network/api_service.dart';
 
@@ -32,6 +34,27 @@ class AuthViewModel extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint("Erreur de connexion : $e");
+      return false;
+    }
+  }
+
+
+  Future<bool> signUp({
+    required String username,
+    required String email,
+    required String password,
+    required File avatarFile,
+  }) async {
+    try {
+      final result = await _apiService.signUpWithFormData(
+        username: username,
+        email: email,
+        password: password,
+        avatarFile: avatarFile,
+      );
+      return result;
+    } catch (e) {
+      debugPrint('Sign up error: $e');
       return false;
     }
   }

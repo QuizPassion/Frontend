@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:quizzy/data/network/config.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:quizzy/utils/mime_utils.dart';
+
 
 class ApiService {
   final http.Client _client;
@@ -32,5 +36,31 @@ class ApiService {
     } catch (e) {
       throw Exception('Erreur de connexion : $e');
     }
+  }
+
+  // =========== SIGNUP ==============
+  Future<bool> signUpWithFormData({
+    required String username,
+    required String email,
+    required String password,
+    required File avatarFile,
+  }) async {
+    var uri = Uri.parse('${Config.signupEndpoint}');
+    var request = http.MultipartRequest('POST', uri);
+
+    request.fields['user_pseudo'] = username;
+    request.fields['email'] = email;
+    request.fields['password'] = password;
+
+    request.files.add(await http.MultipartFile.fromPath(
+      'image',
+      avatarFile.path,
+      contentType: MediaType('image', getMimeType(avatarFile.path)),
+    ));
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    return response.statusCode == 200;
   }
 }
