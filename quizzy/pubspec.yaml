@@ -57,7 +57,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/logo/
-  
+    - assets/img/
+
   fonts:
     - family: Montserrat
       fonts:
