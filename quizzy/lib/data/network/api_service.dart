@@ -39,11 +39,11 @@ class ApiService {
   }
 
   // =========== SIGNUP ==============
-  Future<bool> signUpWithFormData({
+  Future<http.Response> signUpWithFormData({
     required String username,
     required String email,
     required String password,
-    required File avatarFile,
+    File? avatarFile,
   }) async {
     var uri = Uri.parse('${Config.signupEndpoint}');
     var request = http.MultipartRequest('POST', uri);
@@ -52,15 +52,17 @@ class ApiService {
     request.fields['email'] = email;
     request.fields['password'] = password;
 
-    request.files.add(await http.MultipartFile.fromPath(
-      'image',
-      avatarFile.path,
-      contentType: MediaType('image', getMimeType(avatarFile.path)),
-    ));
+    if (avatarFile != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        avatarFile.path,
+        contentType: MediaType('image', getMimeType(avatarFile.path)),
+      ));
+    }
 
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
 
-    return response.statusCode == 200;
+    return response;
   }
 }

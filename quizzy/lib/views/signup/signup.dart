@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   File? _avatar;
+  bool _isLoading = false;
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -28,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
         _avatar = File(pickedFile.path);
       });
     } else {
-      _avatar = null; // Reset avatar if no image is picked
+      _avatar = null;
     }
   }
 
@@ -36,22 +37,25 @@ class _SignUpPageState extends State<SignUpPage> {
     final username = _usernameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    final avatarFile = _avatar;
 
-    if (username.isEmpty || email.isEmpty || password.isEmpty || avatarFile == null) {
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields and select an image")),
+        const SnackBar(content: Text("Please fill in all fields")),
       );
       return;
     }
+
+    setState(() => _isLoading = true);
 
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     final success = await authViewModel.signUp(
       username: username,
       email: email,
       password: password,
-      avatarFile: avatarFile,
+      avatarFile: _avatar,
     );
+
+    setState(() => _isLoading = false);
 
     if (success) {
       Navigator.pushNamed(context, '/home');
@@ -82,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Inscription",
+                  "Sign Up",
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
                     color: Colors.white,
@@ -92,7 +96,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // Avatar Picker
                 GestureDetector(
                   onTap: _pickImage,
                   child: CircleAvatar(
@@ -106,49 +109,48 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
 
                 const SizedBox(height: 20),
-
-                // Username
                 _buildTextField("Username", "Fan2StarWars", _usernameController),
                 const SizedBox(height: 20),
-
-                // Email
                 _buildTextField("Email", "fan2StarWars@gmail.com", _emailController),
                 const SizedBox(height: 20),
-
-                // Password
                 _buildTextField("Password", "************", _passwordController, obscure: true),
                 const SizedBox(height: 40),
 
-                // Sign Up Button
                 SizedBox(
                   width: 270,
                   height: 40,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    onPressed: _signUp,
-                    child: Ink(
-                      decoration: BoxDecoration(
-                        gradient: AppColors.gradientLTR,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            fontFamily: AppFonts.lato,
-                            fontSize: 20,
-                            color: Colors.white,
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: _signUp,
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              gradient: AppColors.gradientLTR,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  fontFamily: AppFonts.lato,
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
 
                 const SizedBox(height: 24),
@@ -225,6 +227,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: TextField(
               controller: controller,
               obscureText: obscure,
+              enabled: !_isLoading,
               decoration: InputDecoration(
                 hintText: hint,
                 filled: true,

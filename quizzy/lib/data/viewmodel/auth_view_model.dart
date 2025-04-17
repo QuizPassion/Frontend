@@ -43,7 +43,7 @@ class AuthViewModel extends ChangeNotifier {
     required String username,
     required String email,
     required String password,
-    required File avatarFile,
+    required File? avatarFile,
   }) async {
     try {
       final result = await _apiService.signUpWithFormData(
@@ -52,7 +52,19 @@ class AuthViewModel extends ChangeNotifier {
         password: password,
         avatarFile: avatarFile,
       );
-      return result;
+
+      if (result.statusCode == 200){
+        return true;
+      } else if (result.statusCode == 400) {
+        debugPrint("Erreur de validation : ${result.body}");
+        return false;
+      } else if (result.statusCode == 500) {
+        debugPrint("Erreur serveur : ${result.body}");
+        return false;
+      } else {
+        debugPrint("Erreur inconnue : ${result.statusCode}");
+        return false;
+      }
     } catch (e) {
       debugPrint('Sign up error: $e');
       return false;
