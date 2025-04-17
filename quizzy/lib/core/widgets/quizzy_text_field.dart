@@ -7,6 +7,8 @@ class QuizzyTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final double width;
   final double height;
+  final int? maxLines;
+  final int? minLines;
 
   const QuizzyTextField({
     super.key,
@@ -14,6 +16,8 @@ class QuizzyTextField extends StatelessWidget {
     this.prefixIcon,
     this.width = double.infinity,
     this.height = 42,
+    this.maxLines = 1,
+    this.minLines,
   });
 
   @override
@@ -22,13 +26,16 @@ class QuizzyTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
+        maxLines: maxLines,
+        minLines: minLines,
         style: const TextStyle(
           fontFamily: AppFonts.lato,
           fontSize: 18,
           color: AppColors.lightGrey,
         ),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           hintText: hintText,
           hintStyle: const TextStyle(
             color: AppColors.lightGrey,
@@ -46,7 +53,8 @@ class QuizzyTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
-            borderSide: const BorderSide(color: AppColors.royalPurple, width: 2),
+            borderSide:
+                const BorderSide(color: AppColors.royalPurple, width: 2),
           ),
         ),
       ),
