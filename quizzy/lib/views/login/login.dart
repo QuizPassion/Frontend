@@ -1,9 +1,53 @@
 import 'package:flutter/material.dart';
-import '../core/app_colors.dart';
-import '../core/app_fonts.dart';
-import '../core/widgets/background_decoration.dart';
-class LoginPage extends StatelessWidget {
+import 'package:provider/provider.dart';
+import 'package:quizzy/core/app_colors.dart';
+import 'package:quizzy/core/app_fonts.dart';
+import 'package:quizzy/core/widgets/background_decoration.dart';
+import 'package:quizzy/data/viewmodel/auth_view_model.dart';
+
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _login() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    final success = await authViewModel.login(username, password);
+
+    if (success) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Erreur'),
+          content: const Text('Email ou mot de passe incorrect'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +60,8 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Title
                 const Text(
-                  "Login",
+                  "Connexion",
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
                     color: Colors.white,
@@ -29,25 +72,25 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 // Email
-                // Email
                 SizedBox(
                   width: 300,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Email",
+                    children: [
+                      const Text(
+                        "Email or Pseudo",
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: AppFonts.lato,
                           fontSize: 20,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       SizedBox(
                         height: 40,
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: _usernameController,
+                          decoration: const InputDecoration(
                             hintText: "fan2StarWars@gmail.com",
                             filled: true,
                             fillColor: AppColors.lightGrey,
@@ -62,16 +105,15 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 20),
 
-                // Password 
+                // Password
                 SizedBox(
                   width: 300,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Password",
                         style: TextStyle(
                           color: Colors.white,
@@ -79,11 +121,13 @@ class LoginPage extends StatelessWidget {
                           fontSize: 20,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       SizedBox(
                         height: 40,
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
                             hintText: "************",
                             filled: true,
                             fillColor: AppColors.lightGrey,
@@ -98,10 +142,9 @@ class LoginPage extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 40),
 
-                // SignUp 
+                // Login Button
                 SizedBox(
                   width: 270,
                   height: 40,
@@ -112,9 +155,7 @@ class LoginPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/home');
-                    },
+                    onPressed: _login,
                     child: Ink(
                       decoration: BoxDecoration(
                         gradient: AppColors.gradientLTR,
@@ -134,10 +175,9 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 24),
 
-                // Login
+                // Sign Up prompt
                 const Text(
                   "Don't have an account ? Sign Up here",
                   style: TextStyle(
@@ -147,6 +187,8 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+
+                // Sign Up Button
                 SizedBox(
                   width: 240,
                   height: 40,
@@ -179,7 +221,6 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
               ],
             ),

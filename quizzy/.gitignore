@@ -43,3 +43,19 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+android/app/.cxx/
+
+android/.gradle/
+android/local.properties
+android/build/
+
+
+# Gradle files
+linux/flutter/
+windows/flutter/
+
+# Ignorer les fichiers générés pour macOS
+macos/Flutter/
+
+# Ignore les fichiers de config de l'IDE
+.idea/

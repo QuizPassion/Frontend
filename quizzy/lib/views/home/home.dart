@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../core/app_colors.dart';
-import '../core/app_fonts.dart';
-import '../core/widgets/app_bar.dart';
-import '../core/widgets/background_decoration.dart';
-import '../core/widgets/nav_bar.dart';
-import '../core/widgets/quizzy_text_field.dart';
-
+import 'package:quizzy/core/app_fonts.dart';
+import 'package:quizzy/core/widgets/quizzy_text_field.dart';
+import '../../core/app_colors.dart';
+import '../../core/widgets/app_bar.dart';
+import '../../core/widgets/background_decoration.dart';
+import '../../core/widgets/nav_bar.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

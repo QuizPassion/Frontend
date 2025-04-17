@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:quizzy/home/home.dart';
-import 'welcome/welcome.dart';
-import 'login/login.dart';   
-import 'signup/signup.dart'; 
+import 'package:provider/provider.dart';
+import 'package:quizzy/data/viewmodel/auth_view_model.dart';
+import 'package:quizzy/views/home/home.dart';
+import 'package:quizzy/views/welcome/welcome.dart';
+import 'package:quizzy/views/login/login.dart';
+import 'package:quizzy/views/signup/signup.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,9 +29,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         useMaterial3: true,
       ),
-      home: const WelcomePage(),
-
+      initialRoute: '/', // Tu peux adapter pour `/home` si déjà connecté
       routes: {
+        '/': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
