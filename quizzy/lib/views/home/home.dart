@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:quizzy/core/app_fonts.dart';
-import 'package:quizzy/core/widgets/quizzy_text_field.dart';
 import '../../core/app_colors.dart';
+import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
 import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/quizzy_text_field.dart';
+import '../../core/widgets/search_with_qr.dart';
+import 'widgets/quiz_card.dart';
+import 'widgets/quiz_card_group.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -24,40 +28,22 @@ class HomePage extends StatelessWidget {
                   'Multiplayer',
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
-                    fontSize: 20,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.lightGrey,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // join game search bar
-                SizedBox(
-                  width: 350,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: QuizzyTextField(
-                          hintText: 'Search and join a game',
-                          height: 42,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Container(
-                        height: 42,
-                        width: 42,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.deepLavender),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: const Icon(Icons.qr_code, color: AppColors.lightGrey),
-                      ),
-                    ],
-                  ),
+                SearchWithQrRow(
+                  hintText: 'Search and join a game',
+                  onQrTap: () {
+                    Navigator.pushNamed(context, '/joinedGameLobby');
+                  },
                 ),
 
-
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 const Text(
                   'ou',
                   style: TextStyle(
@@ -66,18 +52,20 @@ class HomePage extends StatelessWidget {
                     fontFamily: AppFonts.lato,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 // create game btn
                 SizedBox(
                   width: 350,
                   height: 42,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/createdGameLobby');
+                    },
                     icon: const Icon(
                       Icons.add_circle_outline,
                       color: AppColors.lightGrey,
-                      size: 26, 
+                      size: 26,
                     ),
                     label: const Text(
                       'Create your own game',
@@ -99,25 +87,50 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
 
                 const Text(
                   'Solo',
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
-                    fontSize: 20,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.lightGrey,
                   ),
                 ),
-                const SizedBox(height: 16),
-
+                const SizedBox(height: 8),
                 // search quizz search bar
                 QuizzyTextField(
                   hintText: 'Search for a quiz',
                   prefixIcon: Icons.search,
                   // width: 350,
                   height: 42,
+                ),
+
+                const SizedBox(height: 24),
+
+                const QuizCardGroup(
+                  title: 'Quiz from the community',
+                  cards: [
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const QuizCardGroup(
+                  title: 'Our Quiz',
+                  cards: [
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                    QuizCardSmall(label: 'Star Wars'),
+                  ],
                 ),
               ],
             ),
@@ -126,8 +139,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: QuizzyNavBar(
         currentIndex: 0,
-        onTap: (index) {
-        },
+        onTap: (index) {},
       ),
     );
   }
