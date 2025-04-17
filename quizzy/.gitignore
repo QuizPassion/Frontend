@@ -57,3 +57,5 @@ windows/flutter/
 # Ignorer les fichiers générés pour macOS
 macos/Flutter/
 
+# Ignore les fichiers de config de l'IDE
+.idea/
