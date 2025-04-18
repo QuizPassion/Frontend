@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -44,8 +45,6 @@ class ApiService {
     return response;
   }
 
-  
-
   // =========== SIGNUP ============
   Future<Response> signUpWithFormData({
     required String username,
@@ -65,17 +64,19 @@ class ApiService {
         ),
     });
 
-    final response = await _dio.post('${Config.signupEndpoint}', data: formData);
+    final options = Options(
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    );
+
+    final response = await _dio.post('${Config.signupEndpoint}', data: formData, options: options);
+
     return response;
   }
-  
-  
-  
+
   // =========== FETCH QUIZZES ============
   Future<List<Quiz>> fetchCommunityQuizzes() async {
-    final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
-    print('Cookies envoyés : $cookies');
-
     final response = await _dio.get('${Config.quizEndpoint}');
 
     if (response.statusCode == 200) {
@@ -88,10 +89,8 @@ class ApiService {
       throw Exception('Erreur serveur : ${response.statusCode}');
     }
   }
-  
 
-
-  // ============FETCH USER PROFILE ============
+  // ============ FETCH USER PROFILE ============
   Future<Response> getUserProfile() async {
     final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
     print('Cookies envoyés pour récupérer le user: $cookies');
@@ -107,4 +106,52 @@ class ApiService {
     }
   }
 
+  // ============ CREATE QUIZ ============
+  Future<Response> createQuiz({
+    required String name,
+    required String description,
+    required String theme,
+    File? avatarFile,
+  }) async {
+    FormData formData = FormData.fromMap({
+      'title': name,
+      'description': description,
+      'theme': theme,
+      if (avatarFile != null)
+        'image': await MultipartFile.fromFile(
+          avatarFile.path,
+          filename: avatarFile.path.split('/').last,
+          contentType: MediaType('image', getMimeType(avatarFile.path)),
+        ),
+    });
+
+    final response = await _dio.post(
+      Config.createQuizEndpoint,
+      data: formData,
+    );
+
+    return response;
+  }
+
+  // ============ CREATE QUESTION ============
+  Future<Response> createQuestion({
+    required String quizId,
+    required String question,
+    required List<Map<String, dynamic>> options,
+  }) async {
+    // Constructing the request body
+    FormData formData = FormData.fromMap({
+      'quiz_id': quizId,
+      'question': question,
+      'options': jsonEncode(options),
+    });
+    print('FormData: $options'); // Debugging line to check the FormData
+
+    final response = await _dio.post(
+      '${Config.createQuestionEndpoint}',
+      data: formData,
+    );
+
+    return response;
+  }
 }

@@ -1,4 +1,6 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/network/api_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
@@ -8,11 +10,11 @@ import '../../core/widgets/save_button.dart';
 import 'widgets/create_question_card.dart';
 
 class CreateQuizQuestionsPage extends StatefulWidget {
-  const CreateQuizQuestionsPage({super.key});
+  const CreateQuizQuestionsPage({super.key, required this.quizId});
+  final int quizId;
 
   @override
-  State<CreateQuizQuestionsPage> createState() =>
-      _CreateQuizQuestionsPageState();
+  State<CreateQuizQuestionsPage> createState() => _CreateQuizQuestionsPageState();
 }
 
 class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
@@ -25,8 +27,7 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       if (copyFrom != null) {
         _questions.add(QuestionData.clone(copyFrom));
       } else {
-        _questions.add(QuestionData(
-            titleController: TextEditingController(), options: []));
+        _questions.add(QuestionData(titleController: TextEditingController(), options: []));
       }
     });
   }
@@ -36,6 +37,45 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       _questions.removeAt(index);
     });
   }
+
+  // Fonction pour envoyer les questions à l'API
+  Future<void> submitQuiz() async {
+    final int quizId = widget.quizId;  // Récupère l'ID du quiz à partir de widget.quizId
+
+    for (var question in _questions) {
+      List<Map<String, dynamic>> options = [];
+      for (var i = 0; i < question.options.length; i++) {
+        options.add({
+          'text': question.options[i].textController.text.trim(),
+          'isCorrect': question.options[i].isCorrect,
+        });
+      }
+
+      // Envoi de la question et des options à l'API
+      try {
+        final response = await ApiService().createQuestion(
+          quizId: quizId.toString(),  // Envoie quizId comme string si l'API l'attend sous forme de chaîne
+          question: question.titleController.text.trim(),
+          options: options,
+        );
+
+        // Log le statusCode et body pour avoir plus de détails
+        print("Status Code: ${response.statusCode}");
+        print("Response Body: ${response.body}");
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          debugPrint('✅ Question ajoutée');
+        } else {
+          debugPrint('❌ Erreur lors de l\'ajout de la question. Response: ${response.body}');
+        }
+      } catch (e) {
+        debugPrint('❌ Erreur lors de l\'ajout de la question : $e');
+      }
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +145,8 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
               const SizedBox(height: 24),
               Center(
                 child: SaveButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await submitQuiz();
                     Navigator.pushNamed(context, '/allQuiz');
                   },
                 ),
@@ -120,4 +161,8 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       ),
     );
   }
+}
+
+extension on Response {
+  get body => null;
 }

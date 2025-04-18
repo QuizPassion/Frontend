@@ -13,7 +13,6 @@ class Quiz {
 
   // Factory constructor pour convertir le JSON en un objet Quiz
   factory Quiz.fromJson(Map<String, dynamic> json) {
-    print('Parsing JSON: ${json['Title']}');  // Debugging
     return Quiz(
       id: json['ID'], 
       title: json['Title'], 

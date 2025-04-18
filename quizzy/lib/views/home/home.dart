@@ -106,6 +106,7 @@ class HomePage extends StatelessWidget {
                   hintText: 'Search for a quiz',
                   prefixIcon: Icons.search,
                   height: 42,
+                  controller: TextEditingController(),
                 ),
 
                 const SizedBox(height: 24),

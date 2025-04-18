@@ -11,7 +11,10 @@ class UserProvider extends ChangeNotifier {
     try {
       final response = await ApiService().getUserProfile();
       _user = User.fromJson(response.data);
-      print(_user?.userPseudo);
+      if (_user == null) {
+        throw Exception("Erreur lors de la récupération du profil utilisateur");
+      }
+      print("Profil utilisateur récupéré : ${_user?.userPseudo}");
       notifyListeners();
     } catch (e) {
       print("Erreur : $e");

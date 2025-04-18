@@ -4,4 +4,6 @@ class Config{
   static const String signupEndpoint = "/NewUser/register";
   static const String quizEndpoint = "/quizz/getall";
   static const String userProfileEndpoint = "/user";
+  static const String createQuizEndpoint = "/quizz/create";
+  static const String createQuestionEndpoint = "/question/create";
 }

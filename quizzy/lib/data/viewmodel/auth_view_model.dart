@@ -57,7 +57,6 @@ class AuthViewModel extends ChangeNotifier {
       );
 
       if (result.statusCode == 200){
-
         await UserProvider().fetchUserProfile();
         return true;
       } else if (result.statusCode == 400) {

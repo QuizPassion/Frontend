@@ -48,7 +48,11 @@ class MyApp extends StatelessWidget {
 
         '/allQuiz': (context) => const AllQuizPage(),
         '/createQuiz': (context) => const CreateQuizPage(),
-        '/createQuizQuestions': (context) => const CreateQuizQuestionsPage(),
+        '/createQuizQuestions': (context) {
+          final quizId = ModalRoute.of(context)!.settings.arguments as int;
+          return CreateQuizQuestionsPage(quizId: quizId);
+        },
+
         '/score': (context) => const ScorePage(),
         '/parameters': (context) => const ParametersPage(),
         '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
