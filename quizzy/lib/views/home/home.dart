@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/model/quiz_request.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
@@ -8,6 +9,7 @@ import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import 'widgets/quiz_card.dart';
 import 'widgets/quiz_card_group.dart';
+import '../../data/network/api_service.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -35,7 +37,7 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                // join game search bar
+                // Join game search bar
                 SearchWithQrRow(
                   hintText: 'Search and join a game',
                   onQrTap: () {
@@ -54,7 +56,7 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                // create game btn
+                // Create game button
                 SizedBox(
                   width: 350,
                   height: 42,
@@ -99,38 +101,34 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                // search quizz search bar
+                // Search quiz search bar
                 QuizzyTextField(
                   hintText: 'Search for a quiz',
                   prefixIcon: Icons.search,
-                  // width: 350,
                   height: 42,
                 ),
 
                 const SizedBox(height: 24),
+                FutureBuilder<List<Quiz>>(
+                  future: ApiService().fetchCommunityQuizzes(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Erreur : ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('Aucun quiz trouvé.');
+                    }
 
-                const QuizCardGroup(
-                  title: 'Quiz from the community',
-                  cards: [
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                const QuizCardGroup(
-                  title: 'Our Quiz',
-                  cards: [
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                    QuizCardSmall(label: 'Star Wars'),
-                  ],
+                    final quizzes = snapshot.data!;
+
+                    return QuizCardGroup(
+                      title: 'Quiz from the community',
+                      cards: quizzes
+                          .map((quiz) => QuizCardSmall(label: quiz.title))
+                          .toList(),
+                    );
+                  },
                 ),
               ],
             ),

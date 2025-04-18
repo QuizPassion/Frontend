@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:quizzy/data/network/api_service.dart';
+import 'package:quizzy/data/provider/user_provider.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -18,6 +19,8 @@ class AuthViewModel extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         // Tu peux ici stocker un token, mettre à jour un User, etc.
+        await UserProvider().fetchUserProfile();
+        debugPrint("Connexion réussie");
         return true;
       } else if (response.statusCode == 401) {
         // Erreur d'authentification
@@ -25,7 +28,7 @@ class AuthViewModel extends ChangeNotifier {
         return false;
       } else if (response.statusCode == 500) {
         // Erreur serveur
-        debugPrint("Erreur serveur : ${response.body}");
+        debugPrint("Erreur serveur : ${response.data}");
         return false;
       } else {
         // Autres erreurs
@@ -54,12 +57,14 @@ class AuthViewModel extends ChangeNotifier {
       );
 
       if (result.statusCode == 200){
+
+        await UserProvider().fetchUserProfile();
         return true;
       } else if (result.statusCode == 400) {
-        debugPrint("Erreur de validation : ${result.body}");
+        debugPrint("Erreur de validation : ${result.data}");
         return false;
       } else if (result.statusCode == 500) {
-        debugPrint("Erreur serveur : ${result.body}");
+        debugPrint("Erreur serveur : ${result.data}");
         return false;
       } else {
         debugPrint("Erreur inconnue : ${result.statusCode}");

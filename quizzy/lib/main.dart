@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
 import 'package:quizzy/views/create-quiz/all_quiz.dart';
 import 'package:quizzy/views/create-quiz/create_quiz.dart';
@@ -18,6 +19,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

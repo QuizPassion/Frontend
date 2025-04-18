@@ -1,68 +1,110 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:quizzy/data/model/quiz_request.dart';
 import 'package:quizzy/data/network/config.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:quizzy/utils/mime_utils.dart';
 
-
 class ApiService {
-  final http.Client _client;
+  static final ApiService _instance = ApiService._internal();
 
-  ApiService({http.Client? client}) : _client = client ?? http.Client();
+  late final Dio _dio;
+  final CookieJar _cookieJar = CookieJar(); // En mémoire uniquement
 
-  // =========== LOGIN ==============
-  
-  Future<http.Response> login({
+  factory ApiService() {
+    return _instance;
+  }
+
+  ApiService._internal() {
+    BaseOptions options = BaseOptions(
+      baseUrl: Config.baseUrl,
+      headers: {'Content-Type': 'application/json'},
+      validateStatus: (status) => status != null,
+    );
+
+    _dio = Dio(options);
+    _dio.interceptors.add(CookieManager(_cookieJar));
+  }
+
+  // =========== LOGIN ============
+  Future<Response> login({
     required String emailOrPseudo,
     required bool isEmail,
     required String password,
   }) async {
-    final uri = Uri.parse('${Config.loginEndPoint}');
+    final body = {
+      if (isEmail) 'email': emailOrPseudo else 'user_pseudo': emailOrPseudo,
+      'password': password,
+    };
 
-    try {
-      final body = jsonEncode({
-        if (isEmail) 'email': emailOrPseudo else 'user_pseudo': emailOrPseudo,
-        'password': password,
-      });
-
-      final response = await _client.post(
-        uri,
-        headers: {'Content-Type': 'application/json'},
-        body: body,
-      );
-
-      return response;
-    } catch (e) {
-      throw Exception('Erreur de connexion : $e');
-    }
+    final response = await _dio.post('${Config.loginEndPoint}', data: body);
+  
+    return response;
   }
 
-  // =========== SIGNUP ==============
-  Future<http.Response> signUpWithFormData({
+  
+
+  // =========== SIGNUP ============
+  Future<Response> signUpWithFormData({
     required String username,
     required String email,
     required String password,
     File? avatarFile,
   }) async {
-    var uri = Uri.parse('${Config.signupEndpoint}');
-    var request = http.MultipartRequest('POST', uri);
+    FormData formData = FormData.fromMap({
+      'user_pseudo': username,
+      'email': email,
+      'password': password,
+      if (avatarFile != null)
+        'image': await MultipartFile.fromFile(
+          avatarFile.path,
+          filename: avatarFile.path.split('/').last,
+          contentType: MediaType('image', getMimeType(avatarFile.path)),
+        ),
+    });
 
-    request.fields['user_pseudo'] = username;
-    request.fields['email'] = email;
-    request.fields['password'] = password;
-
-    if (avatarFile != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'image',
-        avatarFile.path,
-        contentType: MediaType('image', getMimeType(avatarFile.path)),
-      ));
-    }
-
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-
+    final response = await _dio.post('${Config.signupEndpoint}', data: formData);
     return response;
   }
+  
+  
+  
+  // =========== FETCH QUIZZES ============
+  Future<List<Quiz>> fetchCommunityQuizzes() async {
+    final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
+    print('Cookies envoyés : $cookies');
+
+    final response = await _dio.get('${Config.quizEndpoint}');
+
+    if (response.statusCode == 200) {
+      final data = response.data as List;
+      return data.map((json) => Quiz.fromJson(json)).toList();
+    } else if (response.statusCode == 401) {
+      throw Exception('Non autorisé : le token/cookie est manquant ou invalide.');
+    } else {
+      print('Erreur : ${response.statusCode}');
+      throw Exception('Erreur serveur : ${response.statusCode}');
+    }
+  }
+  
+
+
+  // ============FETCH USER PROFILE ============
+  Future<Response> getUserProfile() async {
+    final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
+    print('Cookies envoyés pour récupérer le user: $cookies');
+
+    final response = await _dio.get('${Config.userProfileEndpoint}');
+    if (response.statusCode == 200) {
+      return response;
+    } else if (response.statusCode == 401) {
+      throw Exception('Non autorisé : le token/cookie est manquant ou invalide.');
+    } else {
+      print('Erreur : ${response.statusCode}');
+      throw Exception('Erreur serveur : ${response.statusCode}');
+    }
+  }
+
 }
