@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports
+
 import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzy/data/network/api_service.dart';
