@@ -136,7 +136,7 @@ class CreatedGameLobbyPage extends StatelessWidget {
                         const SizedBox(height: 12),
                         StartGameButton(
                           onPressed: () async {
-                            Navigator.pushNamed(context, '/home');
+                            Navigator.pushNamed(context, '/gameLoading');
                           },
                         ),
                       ],

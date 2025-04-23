@@ -46,12 +46,12 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
-              height: 42,
-              width: 226,
+              height: 30,
+              width: 90,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.royalPurple,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: EdgeInsets.zero, // This is the key change
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -59,18 +59,21 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/inGame');
                 },
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(
-                    color: AppColors.lightGrey,
-                    fontFamily: AppFonts.lato,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                child: const Center( // Ensure the text is centered
+                  child: Text(
+                    'Confirm',
+                    style: TextStyle(
+                      color: AppColors.lightGrey,
+                      fontFamily: AppFonts.lato,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
             ),
           )
+
         ],
       ),
     );
