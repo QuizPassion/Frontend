@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzy/data/model/user.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
@@ -54,10 +53,17 @@ class MyApp extends StatelessWidget {
           '/createQuiz': (context) => const CreateQuizPage(), // Page de création de quiz
           '/score': (context) => const ScorePage(), // Page de score
           '/home': (context) => const HomePage(), // Page principale après login
-
-          // '/createQuizQuestions': (context) => const CreateQuizQuestionsPage(),
           '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
           '/createdGameLobby': (context) => const CreatedGameLobbyPage(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == '/createQuizQuestions') {
+            final quizId = settings.arguments as dynamic;
+            return MaterialPageRoute(
+              builder: (context) => CreateQuizQuestionsPage(quizId: quizId),
+            );
+          }
+          return null; // Return null if no matching route is found
         },
       ),
     );
