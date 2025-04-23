@@ -10,7 +10,7 @@ class StartGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 175,
+      width: 226,
       height: 42,
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -28,10 +28,10 @@ class StartGameButton extends StatelessWidget {
             padding: EdgeInsets.zero,
           ),
           child: const Text(
-            'Save',
+            'Start the game',
             style: TextStyle(
               fontFamily: AppFonts.lato,
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: AppColors.lightGrey,
             ),
