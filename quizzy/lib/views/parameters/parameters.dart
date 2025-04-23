@@ -4,6 +4,7 @@ import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
 import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/profile_icon.dart';
 import 'widgets/parameter_card.dart';
 import '../../core/app_images.dart';
 
@@ -28,24 +29,7 @@ class ParametersPage extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 350),
                     child: Row(
                       children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.deepLavender,
-                              width: 1,
-                            ),
-                          ),
-                          child: Center(
-                            child: Image.asset(
-                              AppImages.profilePicture,
-                              width: 68,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
+                        const ProfileIcon(),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Column(
