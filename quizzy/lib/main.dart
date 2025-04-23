@@ -13,6 +13,10 @@ import 'package:quizzy/views/score/score.dart';
 import 'package:quizzy/views/signup/signup.dart';
 import 'package:quizzy/views/welcome/welcome.dart';
 
+import 'views/create-quiz/create_quiz_questions.dart';
+import 'views/in-game/created_game_lobby.dart';
+import 'views/in-game/joined_game_lobby.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -47,6 +51,10 @@ class MyApp extends StatelessWidget {
           '/createQuiz': (context) => const CreateQuizPage(), // Page de création de quiz
           '/score': (context) => const ScorePage(), // Page de score
           '/home': (context) => const HomePage(), // Page principale après login
+
+          // '/createQuizQuestions': (context) => const CreateQuizQuestionsPage(),
+          '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
+          '/createdGameLobby': (context) => const CreatedGameLobbyPage(),
         },
       ),
     );
