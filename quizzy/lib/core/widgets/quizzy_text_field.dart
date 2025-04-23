@@ -9,6 +9,7 @@ class QuizzyTextField extends StatelessWidget {
   final double height;
   final int? maxLines;
   final int? minLines;
+  final TextEditingController controller;  // Ajoute le controller ici
 
   const QuizzyTextField({
     super.key,
@@ -18,6 +19,7 @@ class QuizzyTextField extends StatelessWidget {
     this.height = 42,
     this.maxLines = 1,
     this.minLines,
+    required this.controller,  // Assure-toi que ce paramètre est requis
   });
 
   @override
@@ -26,6 +28,7 @@ class QuizzyTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
+        controller: controller,  // Assure-toi de lier le controller ici
         maxLines: maxLines,
         minLines: minLines,
         style: const TextStyle(
@@ -34,8 +37,7 @@ class QuizzyTextField extends StatelessWidget {
           color: AppColors.lightGrey,
         ),
         decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           hintText: hintText,
           hintStyle: const TextStyle(
             color: AppColors.lightGrey,
@@ -53,8 +55,7 @@ class QuizzyTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
-            borderSide:
-                const BorderSide(color: AppColors.royalPurple, width: 2),
+            borderSide: const BorderSide(color: AppColors.royalPurple, width: 2),
           ),
         ),
       ),

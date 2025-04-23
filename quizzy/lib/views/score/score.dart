@@ -4,7 +4,6 @@ import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
 import '../../core/widgets/nav_bar.dart';
-import '../../core/widgets/quizzy_text_field.dart';
 
 class ScorePage extends StatelessWidget {
   const ScorePage({super.key});
