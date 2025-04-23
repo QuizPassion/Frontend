@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
-import 'quizzy_text_field.dart'; // Adjust this import based on your folder structure
+import 'quizzy_text_field.dart';
 import '../../core/app_fonts.dart';
 
 class SearchWithQrRow extends StatelessWidget {
