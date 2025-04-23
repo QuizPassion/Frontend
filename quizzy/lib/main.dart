@@ -58,9 +58,9 @@ class MyApp extends StatelessWidget {
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/createQuizQuestions') {
-            final quizId = settings.arguments as dynamic;
+            final quizzData = settings.arguments as Map<String, dynamic>;
             return MaterialPageRoute(
-              builder: (context) => CreateQuizQuestionsPage(quizId: quizId),
+              builder: (context) => CreateQuizQuestionsPage(quizData: quizzData,),
             );
           }
           return null; // Return null if no matching route is found

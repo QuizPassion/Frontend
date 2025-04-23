@@ -12,8 +12,8 @@ import '../../core/widgets/save_button.dart';
 import 'widgets/create_question_card.dart';
 
 class CreateQuizQuestionsPage extends StatefulWidget {
-  const CreateQuizQuestionsPage({super.key, required this.quizId});
-  final int quizId;
+  const CreateQuizQuestionsPage({super.key, required this.quizData});
+  final Map<String, dynamic> quizData;
 
   @override
   State<CreateQuizQuestionsPage> createState() => _CreateQuizQuestionsPageState();
@@ -40,9 +40,41 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
     });
   }
 
+  int? _quizId;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> _createQuizFromData() async {
+    final data = widget.quizData;
+
+    try {
+      final response = await ApiService().createQuiz(
+        name: data['name'],
+        description: data['description'],
+        theme: data['theme'],
+        avatarFile: data['image'], // si besoin tu peux uploader ici
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        setState(() {
+          _quizId = response.data['quiz_id'];
+        });
+        debugPrint('✅ Quiz créé avec ID $_quizId');
+      } else {
+        debugPrint('❌ Erreur de création de quiz');
+      }
+    } catch (e) {
+      debugPrint('❌ Exception API: $e');
+    }
+  }
+
+
   // Fonction pour envoyer les questions à l'API
-  Future<void> submitQuiz() async {
-    final int quizId = widget.quizId;  // Récupère l'ID du quiz à partir de widget.quizId
+  Future<void> _createQuestionFromData() async {
+    final int? quizId = _quizId; 
 
     for (var question in _questions) {
       List<Map<String, dynamic>> options = [];
@@ -148,9 +180,17 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
               Center(
                 child: SaveButton(
                   onPressed: () async {
-                    await submitQuiz();
-                    Navigator.pushNamed(context, '/allQuiz');
-                  },
+                    await _createQuizFromData();
+                    if (_quizId != null) {
+                      await _createQuestionFromData();
+                      Navigator.pushNamed(context, '/allQuiz');
+                    } else {
+                      debugPrint('❌ Quiz non créé, donc les questions ne sont pas envoyées.');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Quiz creation failed. Please try again.")),
+                      );
+                    }
+                  }
                 ),
               ),
             ],
@@ -168,3 +208,4 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
 extension on Response {
   get body => null;
 }
+

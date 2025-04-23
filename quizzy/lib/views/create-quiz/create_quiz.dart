@@ -165,7 +165,22 @@ class CreateQuizPage extends StatelessWidget {
               Center(
                 child: quizProvider.isLoading
                     ? const CircularProgressIndicator(color: AppColors.deepLavender)
-                    : SaveButton(onPressed: () => quizProvider.submitQuiz(context)),
+                    : SaveButton(
+                      onPressed: () {
+                        final quizData = {
+                          'name': quizProvider.quizNameController.text,
+                          'description': quizProvider.descriptionController.text,
+                          'theme': quizProvider.selectedTheme,
+                          'image': quizProvider.imageFile,
+                        };
+
+                        Navigator.pushNamed(
+                          context,
+                          '/createQuizQuestions',
+                          arguments: quizData,
+                        );
+                      },
+                    ),
               ),
             ],
           ),
