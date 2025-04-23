@@ -8,17 +8,21 @@ class BackgroundDecoration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Background pattern
-        Positioned.fill(
-          child: CustomPaint(
-            painter: _DecorationPainter(),
+    return Container(
+      width: double.infinity, // Ensure it takes the full width
+      height: double.infinity, // Ensure it takes the full height
+      child: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _DecorationPainter(),
+            ),
           ),
-        ),
-        // Page content
-        child,
-      ],
+          // Page content
+          child,
+        ],
+      ),
     );
   }
 }
@@ -59,10 +63,3 @@ class _DecorationPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-
-/*
-  return Scaffold(
-      backgroundColor: AppColors.anthraciteBlack,
-      body: BackgroundDecoration (
-*/
