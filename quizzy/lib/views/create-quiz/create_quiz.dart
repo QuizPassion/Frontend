@@ -1,18 +1,34 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:provider/provider.dart';
+import 'package:quizzy/core/app_colors.dart';
+import 'package:quizzy/core/app_fonts.dart';
+import 'package:quizzy/core/widgets/app_bar.dart';
+import 'package:quizzy/core/widgets/background_decoration.dart';
+import 'package:quizzy/core/widgets/nav_bar.dart';
+import 'package:quizzy/core/widgets/quizzy_text_field.dart';
+import 'package:quizzy/core/widgets/save_button.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
-import '../../core/app_colors.dart';
-import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/background_decoration.dart';
-import '../../core/widgets/nav_bar.dart';
-import '../../core/widgets/quizzy_text_field.dart';
-import '../../core/widgets/save_button.dart';
 
-class CreateQuizPage extends StatelessWidget {
+class CreateQuizPage extends StatefulWidget {
   const CreateQuizPage({super.key});
+
+  @override
+  State<CreateQuizPage> createState() => _CreateQuizPageState();
+}
+
+class _CreateQuizPageState extends State<CreateQuizPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // 🔁 Réinitialise les champs quand la page est ouverte
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<QuizProvider>(context, listen: false).reset();
+    });
+  }
 
   Future<void> _pickImage(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -166,21 +182,21 @@ class CreateQuizPage extends StatelessWidget {
                 child: quizProvider.isLoading
                     ? const CircularProgressIndicator(color: AppColors.deepLavender)
                     : SaveButton(
-                      onPressed: () {
-                        final quizData = {
-                          'name': quizProvider.quizNameController.text,
-                          'description': quizProvider.descriptionController.text,
-                          'theme': quizProvider.selectedTheme,
-                          'image': quizProvider.imageFile,
-                        };
+                        onPressed: () {
+                          final quizData = {
+                            'name': quizProvider.quizNameController.text,
+                            'description': quizProvider.descriptionController.text,
+                            'theme': quizProvider.selectedTheme,
+                            'image': quizProvider.imageFile,
+                          };
 
-                        Navigator.pushNamed(
-                          context,
-                          '/createQuizQuestions',
-                          arguments: quizData,
-                        );
-                      },
-                    ),
+                          Navigator.pushNamed(
+                            context,
+                            '/createQuizQuestions',
+                            arguments: quizData,
+                          );
+                        },
+                      ),
               ),
             ],
           ),

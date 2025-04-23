@@ -93,4 +93,14 @@ class QuizProvider extends ChangeNotifier {
     _descriptionController.dispose();
     super.dispose();
   }
+
+  void reset() {
+    _quizNameController.clear();
+    _descriptionController.clear();
+    _selectedTheme = null;
+    _imageFile = null;
+    _isLoading = false;
+    notifyListeners();
+  }
+  
 }
