@@ -51,15 +51,15 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.royalPurple,
-                  padding: EdgeInsets.zero, // This is the key change
+                  padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/inGame');
+                  Navigator.pushNamed(context, '/endGame');
                 },
-                child: const Center( // Ensure the text is centered
+                child: const Center( 
                   child: Text(
                     'Confirm',
                     style: TextStyle(
