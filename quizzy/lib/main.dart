@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzy/data/model/user.dart';
 import 'package:quizzy/data/network/api_service.dart';
+import 'package:quizzy/data/provider/quiz_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
 import 'package:quizzy/domain/usercases/get_user_profile.dart';
@@ -33,8 +35,9 @@ class MyApp extends StatelessWidget {
           create: (context) => UserProvider(Provider.of<GetUserProfile>(context, listen: false)),
         ),
         
-        // Fournir AuthViewModel ici
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
+
       ],
       child: MaterialApp(
         title: 'Quizzy',
