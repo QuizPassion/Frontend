@@ -20,8 +20,8 @@ class _ParametersPageState extends State<ParametersPage> {
   @override
   void initState() {
     super.initState();
-    // Charger les données de l'utilisateur seulement si elles ne sont pas déjà chargées
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    // Charger le profil de l'utilisateur uniquement s'il n'est pas déjà chargé
     if (userProvider.user == null) {
       userProvider.fetchUserProfile();
     }
@@ -38,15 +38,16 @@ class _ParametersPageState extends State<ParametersPage> {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Consumer<UserProvider>(
               builder: (context, userProvider, child) {
-                // Si les données sont toujours nulles, afficher un loader
+                // Si les données de l'utilisateur sont en cours de chargement, afficher un loader
                 if (userProvider.user == null) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
+                // Si les données sont chargées, afficher les informations de l'utilisateur
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // profile row
+                    // Affichage du profil de l'utilisateur
                     Center(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 350),
@@ -110,7 +111,7 @@ class _ParametersPageState extends State<ParametersPage> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Cards de paramètres
+                    // Liste des cartes de paramètres
                     Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

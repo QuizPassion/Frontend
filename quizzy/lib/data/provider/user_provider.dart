@@ -1,29 +1,22 @@
+// data/provider/user_provider.dart
 import 'package:flutter/material.dart';
 import 'package:quizzy/data/model/user.dart';
-import 'package:quizzy/data/network/api_service.dart';
+import 'package:quizzy/domain/usercases/get_user_profile.dart';
 
-class UserProvider extends ChangeNotifier {
+class UserProvider with ChangeNotifier {
+  final GetUserProfile getUserProfile;
   User? _user;
 
   User? get user => _user;
 
+  UserProvider(this.getUserProfile);
+
   Future<void> fetchUserProfile() async {
     try {
-      final response = await ApiService().getUserProfile();
-      _user = User.fromJson(response.data);
-      if (_user == null) {
-        throw Exception("Erreur lors de la récupération du profil utilisateur");
-      }
-      print("Profil utilisateur récupéré : ${_user?.userPseudo}");
+      _user = await getUserProfile.execute();
       notifyListeners();
     } catch (e) {
-      print("Erreur : $e");
+      print("Error fetching user profile: $e");
     }
-  }
-
-  // Mettre à jour le profil utilisateur
-  void updateUser(User updatedUser) {
-    _user = updatedUser;
-    notifyListeners();
   }
 }

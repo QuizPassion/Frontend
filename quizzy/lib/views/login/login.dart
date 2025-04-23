@@ -4,6 +4,7 @@ import 'package:quizzy/core/app_colors.dart';
 import 'package:quizzy/core/app_fonts.dart';
 import 'package:quizzy/core/widgets/background_decoration.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
+import 'package:quizzy/data/provider/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,11 +22,17 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text.trim();
 
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-    final success = await authViewModel.login(username, password);
+    final success = await authViewModel.login(context, username , password);  // Pas besoin de BuildContext ici
 
     if (success) {
+      // Mettre à jour l'utilisateur dans le UserProvider
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.fetchUserProfile();  // Récupérer les informations de l'utilisateur
+
+      // Rediriger vers la page d'accueil
       Navigator.pushNamed(context, '/home');
     } else {
+      // Afficher l'erreur de connexion
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -71,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // Email
+                // Email or Pseudo
                 SizedBox(
                   width: 300,
                   child: Column(

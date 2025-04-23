@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final ApiService _apiService = ApiService();
 
-  Future<bool> login(String username, String password) async {
+  Future<bool> login(BuildContext context, String username, String password) async {
     final isEmail = username.contains('@');
 
     try {
@@ -18,8 +19,11 @@ class AuthViewModel extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
+        // Récupérer l'instance de UserProvider à partir du contexte
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        
         // Tu peux ici stocker un token, mettre à jour un User, etc.
-        await UserProvider().fetchUserProfile();
+        await userProvider.fetchUserProfile();
         debugPrint("Connexion réussie");
         return true;
       } else if (response.statusCode == 401) {
@@ -41,8 +45,8 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-
   Future<bool> signUp({
+    required BuildContext context,
     required String username,
     required String email,
     required String password,
@@ -56,8 +60,12 @@ class AuthViewModel extends ChangeNotifier {
         avatarFile: avatarFile,
       );
 
-      if (result.statusCode == 200){
-        await UserProvider().fetchUserProfile();
+      if (result.statusCode == 200) {
+        // Récupérer l'instance de UserProvider à partir du contexte
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        
+        // Mettre à jour les données de l'utilisateur après l'inscription
+        await userProvider.fetchUserProfile();
         return true;
       } else if (result.statusCode == 400) {
         debugPrint("Erreur de validation : ${result.data}");

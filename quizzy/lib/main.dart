@@ -1,63 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
+import 'package:quizzy/domain/usercases/get_user_profile.dart';
 import 'package:quizzy/views/create-quiz/all_quiz.dart';
 import 'package:quizzy/views/create-quiz/create_quiz.dart';
-import 'package:quizzy/views/create-quiz/create_quiz_questions.dart';
 import 'package:quizzy/views/home/home.dart';
-import 'package:quizzy/views/in-game/created_game_lobby.dart';
-import 'package:quizzy/views/in-game/joined_game_lobby.dart';
+import 'package:quizzy/views/login/login.dart';
 import 'package:quizzy/views/parameters/parameters.dart';
 import 'package:quizzy/views/score/score.dart';
-import 'package:quizzy/views/welcome/welcome.dart';
-import 'package:quizzy/views/login/login.dart';
 import 'package:quizzy/views/signup/signup.dart';
+import 'package:quizzy/views/welcome/welcome.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Quizzy',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-        useMaterial3: true,
-      ),
-      initialRoute: '/', // Tu peux adapter pour `/home` si déjà connecté
-      routes: {
-        '/': (context) => const WelcomePage(),
-        '/login': (context) => const LoginPage(),
-        '/signup': (context) => const SignUpPage(),
-        '/home': (context) => const HomePage(),
-        '/welcome': (context) => const WelcomePage(),
+    return MultiProvider(
+      providers: [
+        Provider<GetUserProfile>(create: (_) => GetUserProfile(ApiService())),
 
-        '/allQuiz': (context) => const AllQuizPage(),
-        '/createQuiz': (context) => const CreateQuizPage(),
-        '/createQuizQuestions': (context) {
-          final quizId = ModalRoute.of(context)!.settings.arguments as int;
-          return CreateQuizQuestionsPage(quizId: quizId);
+        // Fournir UserProvider ici
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(Provider.of<GetUserProfile>(context, listen: false)),
+        ),
+        
+        // Fournir AuthViewModel ici
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Quizzy',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const WelcomePage(), // Page d'accueil ou première page
+          '/login': (context) => const LoginPage(),
+          '/signup': (context) => const SignUpPage(),
+          '/parameters': (context) => const ParametersPage(), // Page des paramètres
+          '/allQuiz': (context) => const AllQuizPage(), // Page des quiz
+          '/createQuiz': (context) => const CreateQuizPage(), // Page de création de quiz
+          '/score': (context) => const ScorePage(), // Page de score
+          '/home': (context) => const HomePage(), // Page principale après login
         },
-
-        '/score': (context) => const ScorePage(),
-        '/parameters': (context) => const ParametersPage(),
-        '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
-        '/createdGameLobby': (context) => const CreatedGameLobbyPage(),
-      },
+      ),
     );
   }
 }
