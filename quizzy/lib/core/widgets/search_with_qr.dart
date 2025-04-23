@@ -22,7 +22,8 @@ class SearchWithQrRow extends StatelessWidget {
           Expanded(
             child: QuizzyTextField(
               hintText: hintText,
-              height: 42,
+              height: 42, 
+              controller: TextEditingController(), // You can replace this with your actual controller
             ),
           ),
           const SizedBox(width: 4),

@@ -6,6 +6,7 @@ import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/background_decoration.dart';
 import '../../data/viewmodel/auth_view_model.dart';
+import '../../data/provider/user_provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -33,6 +34,12 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  // Fonction de validation de l'email
+  bool _isEmailValid(String email) {
+    final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+    return emailRegex.hasMatch(email);
+  }
+
   void _signUp() async {
     final username = _usernameController.text.trim();
     final email = _emailController.text.trim();
@@ -45,10 +52,18 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
+    if (!_isEmailValid(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid email")),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     final success = await authViewModel.signUp(
+      context: context,
       username: username,
       email: email,
       password: password,
@@ -58,8 +73,14 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() => _isLoading = false);
 
     if (success) {
+      // Si l'inscription réussit, récupérer le profil utilisateur
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.fetchUserProfile();
+
+      // Naviguer vers la page d'accueil ou une page spécifique
       Navigator.pushNamed(context, '/home');
     } else {
+      // Afficher un message d'erreur détaillé si l'inscription échoue
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Signup failed. Try again.")),
       );
@@ -96,6 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 40),
 
+                // Avatar picker
                 GestureDetector(
                   onTap: _pickImage,
                   child: CircleAvatar(
@@ -116,6 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 _buildTextField("Password", "************", _passwordController, obscure: true),
                 const SizedBox(height: 40),
 
+                // Sign Up Button
                 SizedBox(
                   width: 270,
                   height: 40,
@@ -155,6 +178,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 const SizedBox(height: 24),
 
+                // Already have an account
                 const Text(
                   "Already have an account ? Login here",
                   style: TextStyle(
@@ -165,6 +189,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 10),
 
+                // Login Button
                 SizedBox(
                   width: 240,
                   height: 40,
@@ -207,6 +232,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  // Helper function to build text fields
   Widget _buildTextField(String label, String hint, TextEditingController controller, {bool obscure = false}) {
     return SizedBox(
       width: 300,
