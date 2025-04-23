@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzy/views/in-game/widgets/start_game_btn.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
@@ -22,15 +23,13 @@ class CreatedGameLobbyPage extends StatelessWidget {
       backgroundColor: AppColors.anthraciteBlack,
       body: Stack(
         children: [
-          const BackgroundDecoration(
-            child: SizedBox.shrink(),
-          ),
-          SingleChildScrollView(
+          const BackgroundDecoration(child: SizedBox.shrink()),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Row with Title and Exit Icon
+                // Top Row
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,28 +45,25 @@ class CreatedGameLobbyPage extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.logout,
-                          color: AppColors.lightGrey, size: 32),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
+                      icon: const Icon(Icons.logout, color: AppColors.lightGrey, size: 32),
+                      onPressed: () => Navigator.pushNamed(context, '/home'),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 24),
-                
+
+                // Search
                 QuizzyTextField(
                   hintText: 'Search for a quiz',
-                  controller: quizProvider.descriptionController,
+                  controller: quizProvider.quizNameController,
                   prefixIcon: Icons.search,
-                  // width: 350,
                   height: 42,
                 ),
 
                 const SizedBox(height: 24),
 
-                // Invite label
+                // Invite Text
                 const Text(
                   'Invite your friends using this code',
                   style: TextStyle(
@@ -79,7 +75,7 @@ class CreatedGameLobbyPage extends StatelessWidget {
 
                 const SizedBox(height: 8),
 
-                // Code container
+                // QR Row
                 QrRow(
                   codeText: '78A5B94K9P',
                   onQrTap: () {
@@ -89,18 +85,71 @@ class CreatedGameLobbyPage extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                const PlayerInGameCard(playerName: 'Player 1'),
-                const SizedBox(height: 4),
-                const PlayerInGameCard(playerName: 'Player 2'),
+                const Text(
+                  'Players 1/20',
+                  style: TextStyle(
+                    fontFamily: AppFonts.lato,
+                    fontSize: 16,
+                    color: AppColors.lightGrey,
+                  ),
+                ),
 
+                const SizedBox(height: 16),
 
+                // Scrollable Grid
+                Expanded(
+                  child: GridView.count(
+                    physics: BouncingScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1,
+                    children: const [
+                      PlayerInGameCard(playerName: 'Player 1'),
+                      PlayerInGameCard(playerName: 'Player 2'),
+                      PlayerInGameCard(playerName: 'Player 3'),
+                      PlayerInGameCard(playerName: 'Player 4'),
+                      PlayerInGameCard(playerName: 'Player 5'),
+                      PlayerInGameCard(playerName: 'Player 6'),
+                      PlayerInGameCard(playerName: 'Player 7'),
+                      PlayerInGameCard(playerName: 'Player 8'),
+                      PlayerInGameCard(playerName: 'Player 9'),
+                    ],
+                  ),
+                ),
+
+                // Bottom Fixed Area
+                Center (
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Launch the game as soon as you are ready',
+                          style: TextStyle(
+                            fontFamily: AppFonts.lato,
+                            fontSize: 16,
+                            color: AppColors.lightGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        StartGameButton(
+                          onPressed: () async {
+                            Navigator.pushNamed(context, '/home');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ],
       ),
       bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 1,
+        currentIndex: 4,
         onTap: (index) {},
       ),
     );
