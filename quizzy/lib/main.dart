@@ -8,6 +8,8 @@ import 'package:quizzy/domain/usercases/get_user_profile.dart';
 import 'package:quizzy/views/create-quiz/all_quiz.dart';
 import 'package:quizzy/views/create-quiz/create_quiz.dart';
 import 'package:quizzy/views/home/home.dart';
+import 'package:quizzy/views/in-game/game_loading.dart';
+import 'package:quizzy/views/in-game/in_game.dart';
 import 'package:quizzy/views/login/login.dart';
 import 'package:quizzy/views/parameters/parameters.dart';
 import 'package:quizzy/views/score/score.dart';
@@ -55,6 +57,8 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomePage(), // Page principale après login
           '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
           '/createdGameLobby': (context) => const CreatedGameLobbyPage(),
+          '/gameLoading': (context) => const GameLoading(),
+          '/inGame': (context) => const InGame(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/createQuizQuestions') {
