@@ -154,4 +154,18 @@ class ApiService {
 
     return response;
   }
+
+  // ============ FETCH ALL MY QUIZZES ============
+  Future<List<Quiz>> fetchMyQuizzes() async {
+    final response = await _dio.get('${Config.myQuizzesEndpoint}');
+    if (response.statusCode == 200) {
+      final data = response.data as List;
+      return data.map((json) => Quiz.fromJson(json)).toList();
+    } else if (response.statusCode == 401) {
+      throw Exception('Non autorisé : le token/cookie est manquant ou invalide.');
+    } else {
+      print('Erreur : ${response.statusCode}');
+      throw Exception('Erreur serveur : ${response.statusCode}');
+    }
+  }
 }

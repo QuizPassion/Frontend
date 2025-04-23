@@ -126,7 +126,7 @@ class HomePage extends StatelessWidget {
                     return QuizCardGroup(
                       title: 'Quiz from the community',
                       cards: quizzes
-                          .map((quiz) => QuizCardSmall(label: quiz.title))
+                          .map((quiz) => QuizCardSmall(label: quiz.title, imageUrl: quiz.image?.url))
                           .toList(),
                     );
                   },

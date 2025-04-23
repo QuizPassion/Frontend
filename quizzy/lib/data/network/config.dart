@@ -6,4 +6,5 @@ class Config{
   static const String userProfileEndpoint = "/user";
   static const String createQuizEndpoint = "/quizz/create";
   static const String createQuestionEndpoint = "/question/create";
+  static const String myQuizzesEndpoint = "/quizz/get";
 }

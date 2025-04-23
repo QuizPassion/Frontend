@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/model/quiz_request.dart';
+import 'package:quizzy/data/network/api_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
@@ -42,9 +44,39 @@ class AllQuizPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              const CreatedQuizzCard(),
-              const SizedBox(height: 16),
-              const CreatedQuizzCard(),
+
+              /// ✅ Correction ici : on return bien le `ListView.builder`
+              FutureBuilder<List<Quiz>>(
+                future: ApiService().fetchMyQuizzes(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Erreur : ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Aucun quiz trouvé.');
+                  }
+
+                  final quizzes = snapshot.data!;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: quizzes.length,
+                    itemBuilder: (context, index) {
+                      final quiz = quizzes[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: CreatedQuizzCard(
+                          quizName: quiz.title,
+                          quizDescription: quiz.description,
+                          quizImageUrl: quiz.image?.url,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),
