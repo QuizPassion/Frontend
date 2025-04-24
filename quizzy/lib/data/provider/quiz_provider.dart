@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/model/quiz_request.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'dart:io';
 
 class QuizProvider extends ChangeNotifier {
+
+  // Fields
+  List<Quiz> _quizzes = [];
+
+  // Controllers
   final TextEditingController _quizNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   String? _selectedTheme;
@@ -15,6 +21,7 @@ class QuizProvider extends ChangeNotifier {
   TextEditingController get descriptionController => _descriptionController;
   String? get selectedTheme => _selectedTheme;
   File? get imageFile => _imageFile;
+  List<Quiz> get quizzes => _quizzes;
 
   // Setters
   void setTheme(String? theme) {
@@ -27,6 +34,28 @@ class QuizProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Fetch community quizzes and update the list
+  Future<void> fetchCommunityQuizzes(BuildContext context) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await ApiService().fetchCommunityQuizzes();
+      print('Response: ${response.length}');  // Log number of quizzes retrieved
+      _quizzes = response;  // Store the retrieved quizzes in the provider
+      notifyListeners(); // Notify listeners to update the UI
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An error occurred while fetching quizzes')),
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners(); // Notify listeners to stop loading state
+    }
+  }
+
+  // Submit a new quiz
   Future<void> submitQuiz(BuildContext context) async {
     final name = _quizNameController.text.trim();
     final desc = _descriptionController.text.trim();
@@ -87,6 +116,7 @@ class QuizProvider extends ChangeNotifier {
     }
   }
 
+  // Dispose controllers to avoid memory leaks
   @override
   void dispose() {
     _quizNameController.dispose();
@@ -94,6 +124,7 @@ class QuizProvider extends ChangeNotifier {
     super.dispose();
   }
 
+  // Reset all fields in the provider
   void reset() {
     _quizNameController.clear();
     _descriptionController.clear();
@@ -102,5 +133,4 @@ class QuizProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-  
 }
