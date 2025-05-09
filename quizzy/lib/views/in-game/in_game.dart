@@ -74,18 +74,18 @@ class _InGameState extends State<InGame> {
 
                 const Spacer(),
 
-                  ElevatedButton(
-                    onPressed: () {
-                        Navigator.pushNamed(context, '/endGame');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.dynamicOrange,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text(
-                      'temporary',
-                    ),
+                ElevatedButton(
+                  onPressed: () {
+                      Navigator.pushNamed(context, '/endGame');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.dynamicOrange,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
+                  child: const Text(
+                    'temporary',
+                  ),
+                ),
                 // Quit Game Button
                 SizedBox(
                   width: double.infinity,
