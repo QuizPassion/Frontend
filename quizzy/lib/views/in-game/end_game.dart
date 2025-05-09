@@ -128,13 +128,12 @@ class EndGame extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  // CHnage to "go to the home page"
                   StartGameButton(
+                    text: 'Go to home page',
                     onPressed: () {
                       Navigator.pushNamed(context, '/home');
                     },
                   ),
-
                 ],
               ),
             ),
