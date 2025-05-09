@@ -7,6 +7,7 @@ import '../../core/widgets/background_decoration.dart';
 import '../../core/widgets/nav_bar.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
+import 'qr_scanner_page.dart';
 import 'widgets/quiz_card.dart';
 import 'widgets/quiz_card_group.dart';
 import '../../data/network/api_service.dart';
@@ -40,11 +41,29 @@ class HomePage extends StatelessWidget {
                 // Join game search bar
                 SearchWithQrRow(
                   hintText: 'Search and join a game',
-                  onQrTap: () {
-                    Navigator.pushNamed(context, '/joinedGameLobby');
+                  onQrTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const QrScanPage()),
+                    );
+                    if (result != null) {
+                      // Handle the scanned result (e.g., join game with result)
+                      print("Scanned QR Code: $result");
+                    }
                   },
                 ),
-
+                ElevatedButton(
+                  onPressed: () {
+                      Navigator.pushNamed(context, '/joinedGameLobby');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.dynamicOrange,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: const Text(
+                    'temporary',
+                  ),
+                ),
                 const SizedBox(height: 8),
                 const Text(
                   'ou',
