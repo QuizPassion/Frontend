@@ -3,27 +3,48 @@ import 'package:provider/provider.dart';
 import 'package:quizzy/views/in-game/widgets/start_game_btn.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
-import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/confirm_exit.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import '../../data/provider/quiz_provider.dart';
 import 'widgets/player_in_game_card.dart';
+import 'dart:math';
+import 'qr_code_display_page.dart';
 
-class CreatedGameLobbyPage extends StatelessWidget {
+class CreatedGameLobbyPage extends StatefulWidget {
   const CreatedGameLobbyPage({super.key});
+
+  @override
+  State<CreatedGameLobbyPage> createState() => _CreatedGameLobbyPageState();
+}
+
+class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
+  late final String code;
+
+  @override
+  void initState() {
+    super.initState();
+    code = _generateCode();
+  }
+
+  String _generateCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    return List.generate(10, (index) => chars[Random().nextInt(chars.length)]).join();
+  }
 
   @override
   Widget build(BuildContext context) {
     final quizProvider = Provider.of<QuizProvider>(context);
 
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (_) {
+      },
+      disabled: true,
       body: Stack(
         children: [
-          const BackgroundDecoration(child: SizedBox.shrink()),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Column(
@@ -46,7 +67,7 @@ class CreatedGameLobbyPage extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.logout, color: AppColors.lightGrey, size: 32),
-                      onPressed: () => Navigator.pushNamed(context, '/home'),
+                      onPressed: () => showConfirmExitDialog(context),
                     ),
                   ],
                 ),
@@ -77,9 +98,14 @@ class CreatedGameLobbyPage extends StatelessWidget {
 
                 // QR Row
                 QrRow(
-                  codeText: '78A5B94K9P',
+                  codeText: code,
                   onQrTap: () {
-                    Navigator.pushNamed(context, '');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => QrCodeDisplayPage(code: code),
+                      ),
+                    );
                   },
                 ),
 
@@ -99,7 +125,7 @@ class CreatedGameLobbyPage extends StatelessWidget {
                 // Scrollable Grid
                 Expanded(
                   child: GridView.count(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
@@ -119,7 +145,7 @@ class CreatedGameLobbyPage extends StatelessWidget {
                 ),
 
                 // Bottom Fixed Area
-                Center (
+                Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12),
                     child: Column(
@@ -147,10 +173,6 @@ class CreatedGameLobbyPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 4,
-        onTap: (index) {},
       ),
     );
   }

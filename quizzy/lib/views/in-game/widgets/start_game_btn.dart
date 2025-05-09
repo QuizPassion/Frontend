@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/app_fonts.dart';
-
 class StartGameButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final String text;
 
-  const StartGameButton({super.key, required this.onPressed});
+  const StartGameButton({
+    super.key,
+    required this.onPressed,
+    this.text = 'Start the game',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +31,9 @@ class StartGameButton extends StatelessWidget {
             ),
             padding: EdgeInsets.zero,
           ),
-          child: const Text(
-            'Start the game',
-            style: TextStyle(
+          child: Text(
+            text,
+            style: const TextStyle(
               fontFamily: AppFonts.lato,
               fontSize: 20,
               fontWeight: FontWeight.w600,

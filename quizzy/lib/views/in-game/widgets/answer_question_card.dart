@@ -3,11 +3,13 @@ import '../../../core/app_colors.dart';
 import '../../../core/app_fonts.dart';
 
 class AnswerQuestionCard extends StatefulWidget {
-  const AnswerQuestionCard({super.key});
+  final VoidCallback onConfirm;
+  const AnswerQuestionCard({super.key, required this.onConfirm});
 
   @override
   State<AnswerQuestionCard> createState() => _AnswerQuestionCardState();
 }
+
 
 class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
   final List<bool> _selectedAnswers = [false, false, false];
@@ -57,9 +59,7 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () {
-                  // Navigator.pushNamed(context, '/endGame');
-                },
+                onPressed: widget.onConfirm,
                 child: const Center( 
                   child: Text(
                     'Confirm',

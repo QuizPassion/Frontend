@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/core/app_colors.dart';
 import 'package:quizzy/core/app_fonts.dart';
-import 'package:quizzy/core/widgets/app_bar.dart';
-import 'package:quizzy/core/widgets/background_decoration.dart';
-import 'package:quizzy/core/widgets/nav_bar.dart';
 import 'package:quizzy/views/parameters/widgets/parameter_card.dart';
 import 'package:quizzy/core/app_images.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/widgets/quizzy_scaffold.dart';
 
 class ParametersPage extends StatefulWidget {
   const ParametersPage({super.key});
@@ -29,11 +28,12 @@ class _ParametersPageState extends State<ParametersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
-      body: BackgroundDecoration(
-        child: Center(
+    return QuizzyScaffold(
+      currentIndex: 3,
+      onTap: (index) {
+      },
+      disabled: false,
+      body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Consumer<UserProvider>(
@@ -173,11 +173,6 @@ class _ParametersPageState extends State<ParametersPage> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 3,
-        onTap: (index) {},
-      ),
     );
   }
 }
