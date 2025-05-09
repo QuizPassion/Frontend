@@ -3,6 +3,7 @@ import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
+import '../../core/widgets/confirm_exit.dart';
 import '../../core/widgets/nav_bar.dart';
 import 'widgets/answer_question_card.dart';
 import 'widgets/answered_question_card.dart';
@@ -90,9 +91,7 @@ class _InGameState extends State<InGame> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                    },
+                    onPressed: () => showConfirmExitDialog(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.royalPurple,
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -118,7 +117,8 @@ class _InGameState extends State<InGame> {
       ),
       bottomNavigationBar: QuizzyNavBar(
         currentIndex: 4,
-        onTap: (index) {},
+        onTap: (_) {},
+        disabled: true, // to disable the nav bar
       ),
     );
   }
