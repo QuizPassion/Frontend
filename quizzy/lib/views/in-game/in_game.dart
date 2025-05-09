@@ -34,7 +34,7 @@ class InGame extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Question 1/15',
+                  'Question 1/15', // use actual nb of questions
                   style: TextStyle(
                     fontFamily: AppFonts.montserrat,
                     fontSize: 20,
@@ -44,7 +44,7 @@ class InGame extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  '1/20 joueurs ont répondu',
+                  '1/20 joueurs ont répondu', // use actual nb of players
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 14,
@@ -54,7 +54,7 @@ class InGame extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // question card
-                const AnswerQuestionCard(),
+                const AnswerQuestionCard(), // use actual question from the quiz
                 
                 // quit btn
                 

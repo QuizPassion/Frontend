@@ -37,11 +37,12 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
             ),
           ),
           const SizedBox(height: 12),
+
           // answer options
-          ..._buildOption('He is white', 0),
+          ..._buildOption('He is white', 0), // replace with actual answers
           ..._buildOption('He is yellow', 1),
           ..._buildOption('He is green', 2),
-          // const SizedBox(height: 12),
+
           // confirm button
           Align(
             alignment: Alignment.bottomRight,
@@ -57,7 +58,7 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/endGame');
+                  // Navigator.pushNamed(context, '/endGame');
                 },
                 child: const Center( 
                   child: Text(
