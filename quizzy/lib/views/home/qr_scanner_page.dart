@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
-import '../../core/app_colors.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 
 class QrScanPage extends StatelessWidget {
   const QrScanPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,      
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (index) {
+      },
+      disabled: false,
       body: MobileScanner(
         onDetect: (capture) {
           final List<Barcode> barcodes = capture.barcodes;
@@ -24,10 +23,6 @@ class QrScanPage extends StatelessWidget {
             }
           }
         },
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 8,
-        onTap: (index) {},
       ),
     );
   }

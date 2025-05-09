@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/background_decoration.dart';
-import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 
 class ScorePage extends StatelessWidget {
   const ScorePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
-      body: BackgroundDecoration(
-        child: Center(
+    return QuizzyScaffold(
+      currentIndex: 2,
+      onTap: (index) {
+      },
+      disabled: false,
+      body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Column(
@@ -34,11 +33,6 @@ class ScorePage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 2,
-        onTap: (index) {},
-      ),
     );
   }
 }

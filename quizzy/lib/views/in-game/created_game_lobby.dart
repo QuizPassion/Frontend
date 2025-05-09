@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:quizzy/views/in-game/widgets/start_game_btn.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
 import '../../core/widgets/background_decoration.dart';
 import '../../core/widgets/confirm_exit.dart';
-import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import '../../data/provider/quiz_provider.dart';
@@ -39,12 +38,13 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   Widget build(BuildContext context) {
     final quizProvider = Provider.of<QuizProvider>(context);
 
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (_) {
+      },
+      disabled: true,
       body: Stack(
         children: [
-          const BackgroundDecoration(child: SizedBox.shrink()),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Column(
@@ -173,11 +173,6 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 4,
-        onTap: (_) {},
-        disabled: true, // to disable the nav bar
       ),
     );
   }

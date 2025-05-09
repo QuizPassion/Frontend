@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/app_images.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/background_decoration.dart';
-import '../../core/widgets/nav_bar.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 import 'widgets/player_in_game_card.dart';
 import 'widgets/start_game_btn.dart';
 
@@ -13,12 +11,13 @@ class EndGame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (index) {
+      },
+      disabled: false,
       body: Stack(
         children: [
-          const BackgroundDecoration(child: SizedBox.shrink()),
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -139,10 +138,6 @@ class EndGame extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 4,
-        onTap: (index) {},
       ),
     );
   }
