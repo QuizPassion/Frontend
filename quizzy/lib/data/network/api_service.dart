@@ -12,7 +12,7 @@ class ApiService {
   static final ApiService _instance = ApiService._internal();
 
   late final Dio _dio;
-  final CookieJar _cookieJar = CookieJar(); // En mémoire uniquement
+  final CookieJar cookieJar = CookieJar(); // En mémoire uniquement
 
   factory ApiService() {
     return _instance;
@@ -26,7 +26,7 @@ class ApiService {
     );
 
     _dio = Dio(options);
-    _dio.interceptors.add(CookieManager(_cookieJar));
+    _dio.interceptors.add(CookieManager(cookieJar));
   }
 
   // =========== LOGIN ============
@@ -92,7 +92,7 @@ class ApiService {
 
   // ============ FETCH USER PROFILE ============
   Future<Response> getUserProfile() async {
-    final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
+    final cookies = await cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
     print('Cookies envoyés pour récupérer le user: $cookies');
 
     final response = await _dio.get('${Config.userProfileEndpoint}');
@@ -167,5 +167,13 @@ class ApiService {
       print('Erreur : ${response.statusCode}');
       throw Exception('Erreur serveur : ${response.statusCode}');
     }
+  }
+
+  // ============ CREATE GAME SESSION ============
+  Future<Response> createGameSession(String code) async {
+    final response = await _dio.post(
+      '${Config.createGameSessionEndpoint}?code=$code',
+    );
+    return response;
   }
 }

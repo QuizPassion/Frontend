@@ -40,6 +40,7 @@ dependencies:
   cookie_jar: ^4.0.5
   dio_cookie_manager: ^3.1.0
   http_parser: ^4.1.2
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   flutter_test:
