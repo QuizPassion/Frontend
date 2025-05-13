@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
-import 'quizzy_text_field.dart'; // Adjust this import based on your folder structure
+import 'quizzy_text_field.dart';
 import '../../core/app_fonts.dart';
 
 class SearchWithQrRow extends StatelessWidget {
@@ -22,7 +22,8 @@ class SearchWithQrRow extends StatelessWidget {
           Expanded(
             child: QuizzyTextField(
               hintText: hintText,
-              height: 42,
+              height: 42, 
+              controller: TextEditingController(),
             ),
           ),
           const SizedBox(width: 4),

@@ -7,9 +7,10 @@ class QuestionData {
   List<OptionData> options;
 
   QuestionData({
-    required this.titleController,
-    required this.options,
-  });
+    TextEditingController? titleController,
+    List<OptionData>? options,
+  })  : titleController = titleController ?? TextEditingController(),
+        options = options ?? [OptionData(), OptionData()];
 
   QuestionData.clone(QuestionData original)
       : titleController =
@@ -17,23 +18,22 @@ class QuestionData {
         options = original.options.map((o) => OptionData.clone(o)).toList();
 }
 
+
 class OptionData {
-  bool check1;
-  bool check2;
+  bool isCorrect;  // Utilisation de isCorrect à la place de check1 et check2
   TextEditingController textController;
 
   OptionData({
-    this.check1 = false,
-    this.check2 = false,
+    this.isCorrect = false,  // initialisé à false
     String text = '',
   }) : textController = TextEditingController(text: text);
 
   OptionData.clone(OptionData original)
-      : check1 = original.check1,
-        check2 = original.check2,
+      : isCorrect = original.isCorrect,
         textController =
             TextEditingController(text: original.textController.text);
 }
+
 
 class CreateQuestionCard extends StatefulWidget {
   final QuestionData data;
@@ -186,15 +186,8 @@ class _OptionRowState extends State<_OptionRow> {
     return Row(
       children: [
         Checkbox(
-          value: widget.data.check1,
-          onChanged: (val) => setState(() => widget.data.check1 = val ?? false),
-          side: const BorderSide(color: AppColors.lightGrey, width: 1),
-          checkColor: AppColors.anthraciteBlack,
-          activeColor: AppColors.lightGrey,
-        ),
-        Checkbox(
-          value: widget.data.check2,
-          onChanged: (val) => setState(() => widget.data.check2 = val ?? false),
+          value: widget.data.isCorrect,  // Utilisation de isCorrect
+          onChanged: (val) => setState(() => widget.data.isCorrect = val ?? false),
           side: const BorderSide(color: AppColors.lightGrey, width: 1),
           checkColor: AppColors.anthraciteBlack,
           activeColor: AppColors.lightGrey,

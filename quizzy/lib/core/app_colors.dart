@@ -47,6 +47,8 @@ class AppColors {
     offset: const Offset(0, 2),
     blurRadius: 4,
   );
+
+  static var darkGrey;
 }
 
 // Simple colors

@@ -4,7 +4,16 @@ import '/core/app_colors.dart';
 import '/core/app_images.dart';
 
 class CreatedQuizzCard extends StatelessWidget {
-  const CreatedQuizzCard({super.key});
+  final String quizName;
+  final String quizDescription;
+  final String? quizImageUrl;
+
+  const CreatedQuizzCard({
+    super.key,
+    required this.quizName,
+    required this.quizDescription,
+    this.quizImageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +31,21 @@ class CreatedQuizzCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            AppImages.quizImage,
-            width: 54,
-            fit: BoxFit.contain,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: quizImageUrl != null && quizImageUrl!.isNotEmpty
+                ? Image.network(
+                    quizImageUrl!,
+                    width: 54,
+                    height: 54,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    AppImages.quizImage,
+                    width: 54,
+                    height: 54,
+                    fit: BoxFit.cover,
+                  ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -34,7 +54,7 @@ class CreatedQuizzCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Quiz sur les jedi dans Star Wars',
+                  quizName,
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 16,
@@ -46,7 +66,7 @@ class CreatedQuizzCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Ce quiz a pour but de tester vos connaissances sur les jedi ...',
+                  quizDescription,
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 13,
