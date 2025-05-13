@@ -88,7 +88,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     }
 
     _channel = IOWebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/$roomId/ws'),
+      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/$roomId/ws?room_id=$roomId'),
       headers: {
         'Cookie': 'jwt_token=$jwt',
       },
