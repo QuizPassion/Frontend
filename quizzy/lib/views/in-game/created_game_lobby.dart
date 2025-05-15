@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
 
@@ -88,7 +89,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     }
 
     _channel = IOWebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/$roomId/ws?room_id=$roomId'),
+      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId'),
       headers: {
         'Cookie': 'jwt_token=$jwt',
       },
@@ -212,9 +213,16 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                         const SizedBox(height: 12),
                         StartGameButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/gameLoading');
+                            _channel.sink.add(jsonEncode({
+                              "type": "join",
+                              "content": {
+                                "room": roomId,
+                                "user": userProvider.user!.userPseudo,
+                              }
+                            }));
                           },
                         ),
+
                       ],
                     ),
                   ),
