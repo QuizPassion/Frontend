@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzy/core/widgets/confirm_exit.dart';
+import 'package:quizzy/core/widgets/quizzy_scaffold.dart';
 import 'package:quizzy/data/network/config.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/views/in-game/widgets/start_game_btn.dart';
@@ -13,13 +15,12 @@ import 'package:cookie_jar/cookie_jar.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/nav_bar.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import '../../data/provider/quiz_provider.dart';
 import '../../data/network/api_service.dart';
 import 'widgets/player_in_game_card.dart';
+import 'qr_code_display_page.dart';
 
 class CreatedGameLobbyPage extends StatefulWidget {
   const CreatedGameLobbyPage({super.key});
@@ -119,9 +120,11 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     final quizProvider = Provider.of<QuizProvider>(context);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (_) {
+      },
+      disabled: true,
       body: Stack(
         children: [
           if (_isLoading)
@@ -147,7 +150,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.logout, color: AppColors.lightGrey, size: 32),
-                      onPressed: () => Navigator.pushNamed(context, '/home'),
+                      onPressed: () => showConfirmExitDialog(context),
                     ),
                   ],
                 ),
@@ -171,7 +174,12 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                 QrRow(
                   codeText: code,
                   onQrTap: () {
-                    // QR functionality
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => QrCodeDisplayPage(code: code),
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 16),
@@ -196,6 +204,8 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                     ],
                   ),
                 ),
+
+                // Bottom Fixed Area
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12),
@@ -231,10 +241,6 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 4,
-        onTap: (index) {},
       ),
     );
   }

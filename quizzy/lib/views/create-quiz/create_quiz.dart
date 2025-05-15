@@ -5,12 +5,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzy/core/app_colors.dart';
 import 'package:quizzy/core/app_fonts.dart';
-import 'package:quizzy/core/widgets/app_bar.dart';
-import 'package:quizzy/core/widgets/background_decoration.dart';
-import 'package:quizzy/core/widgets/nav_bar.dart';
 import 'package:quizzy/core/widgets/quizzy_text_field.dart';
 import 'package:quizzy/core/widgets/save_button.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
+
+import '../../core/widgets/quizzy_scaffold.dart';
 
 class CreateQuizPage extends StatefulWidget {
   const CreateQuizPage({super.key});
@@ -52,11 +51,12 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
       'Literature',
     ];
 
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
-      body: BackgroundDecoration(
-        child: SingleChildScrollView(
+    return QuizzyScaffold(
+      currentIndex: 1,
+      onTap: (index) {
+      },
+      disabled: false,
+      body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,11 +201,6 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 1,
-        onTap: (index) {},
-      ),
     );
   }
 }

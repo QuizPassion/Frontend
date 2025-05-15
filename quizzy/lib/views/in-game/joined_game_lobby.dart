@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/app_bar.dart';
-import '../../core/widgets/background_decoration.dart';
-import '../../core/widgets/nav_bar.dart';
+
+import '../../core/widgets/quizzy_scaffold.dart';
 import '../../core/widgets/search_with_qr.dart';
 
 class JoinedGameLobbyPage extends StatelessWidget {
@@ -11,14 +10,13 @@ class JoinedGameLobbyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const QuizzyAppBar(),
-      backgroundColor: AppColors.anthraciteBlack,
+    return QuizzyScaffold(
+      currentIndex: 8,
+      onTap: (index) {
+      },
+      disabled: false,
       body: Stack(
         children: [
-          const BackgroundDecoration(
-            child: SizedBox.shrink(),
-          ),
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             child: Column(
@@ -99,10 +97,6 @@ class JoinedGameLobbyPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: QuizzyNavBar(
-        currentIndex: 1,
-        onTap: (index) {},
       ),
     );
   }

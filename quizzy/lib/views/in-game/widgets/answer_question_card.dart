@@ -3,11 +3,13 @@ import '../../../core/app_colors.dart';
 import '../../../core/app_fonts.dart';
 
 class AnswerQuestionCard extends StatefulWidget {
-  const AnswerQuestionCard({super.key});
+  final VoidCallback onConfirm;
+  const AnswerQuestionCard({super.key, required this.onConfirm});
 
   @override
   State<AnswerQuestionCard> createState() => _AnswerQuestionCardState();
 }
+
 
 class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
   final List<bool> _selectedAnswers = [false, false, false];
@@ -37,11 +39,12 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
             ),
           ),
           const SizedBox(height: 12),
+
           // answer options
-          ..._buildOption('He is white', 0),
+          ..._buildOption('He is white', 0), // replace with actual answers
           ..._buildOption('He is yellow', 1),
           ..._buildOption('He is green', 2),
-          // const SizedBox(height: 12),
+
           // confirm button
           Align(
             alignment: Alignment.bottomRight,
@@ -51,15 +54,13 @@ class _AnswerQuestionCardState extends State<AnswerQuestionCard> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.royalPurple,
-                  padding: EdgeInsets.zero, // This is the key change
+                  padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/inGame');
-                },
-                child: const Center( // Ensure the text is centered
+                onPressed: widget.onConfirm,
+                child: const Center( 
                   child: Text(
                     'Confirm',
                     style: TextStyle(
