@@ -1,3 +1,10 @@
+# **Quizzy**
+
+<div style="text-align: center;">
+  <img src="quizzy/assets/logo/logo_whole.png" alt="quizzy-logo" style="width:400px;" />
+</div>
+
+
 ## Technologies Used in the Project
 
 ### 1. Develop a Secure Application
