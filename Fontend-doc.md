@@ -3,12 +3,7 @@
 <div style="text-align: center;">
   <img src="quizzy/assets/logo/logo_whole.png" alt="quizzy-logo" style="width:400px;" />
 </div>
-<div style="text-align: center;">
-  <img src="./quizzy/assets/logo/logo_whole.png" alt="quizzy-logo" style="width:400px;" />
-</div>
-<div style="text-align: center;">
-  <img src="../quizzy/assets/logo/logo_whole.png" alt="quizzy-logo" style="width:400px;" />
-</div>
+
 ---
 This document details the frontend structure of the **Quizzy** Flutter mobile application. It covers the project's folder structure, widget usage, and asset organization.
 
