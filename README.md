@@ -1,5 +1,9 @@
 # **Quizzy**
 
+<div style="text-align: center;">
+  <img src="quizzy/assets/logo/logo_whole.png" alt="quizzy-logo" style="width:400px;" />
+</div>
+
 ##  **Project Overview**
 
 **Quizzy** is an interactive mobile application built with **Flutter**, allowing users to **create**, **participate in**, and **customize** quizzes.  
