@@ -168,7 +168,7 @@ You can customize the app by editing:
 - **MySQL/Redis** : Make sure the services are running.
 - **Flutter dependencies** : Run `flutter clean` then `flutter pub get`.
 - **Backend not accessible** : Check the port and ensure the server is running.
-- **Gradle (Windows)** :Ensure your ``gradle.properties`` file contains the line :
+- **Gradle (Windows)** : Ensure your ``gradle.properties`` file contains the line :
   ```properties
   org.gradle.java.home=C:/Program Files/AdoptOpenJDK/jdk-17.0.7.7-hotspot
   ```
@@ -180,5 +180,3 @@ You can customize the app by editing:
 - Go Backend: ``localhost:<PORT>`` (default is 8080)
 
 - Flutter Frontend: run on a connected device or emulator
-
----
