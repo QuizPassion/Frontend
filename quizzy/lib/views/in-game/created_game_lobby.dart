@@ -184,7 +184,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Players 1/20',
+                  'Players 1/10',
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 16,
@@ -200,7 +200,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                     mainAxisSpacing: 12,
                     childAspectRatio: 1,
                     children: [
-                      PlayerInGameCard(playerName: userProvider.user!.userPseudo),
+                      PlayerInGameCard(playerName: userProvider.user!.userPseudo, playerAvatar: userProvider.user!.image.url,),
                     ],
                   ),
                 ),

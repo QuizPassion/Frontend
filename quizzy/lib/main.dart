@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzy/core/widgets/search_with_qr.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
+import 'package:quizzy/data/provider/room_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
 import 'package:quizzy/domain/usercases/get_user_profile.dart';
@@ -11,14 +11,12 @@ import 'package:quizzy/views/create-quiz/create_quiz.dart';
 import 'package:quizzy/views/home/home.dart';
 import 'package:quizzy/views/home/qr_scanner_page.dart';
 import 'package:quizzy/views/in-game/end_game.dart';
-// import 'package:quizzy/views/in-game/game_loading.dart';
 import 'package:quizzy/views/in-game/in_game.dart';
 import 'package:quizzy/views/login/login.dart';
 import 'package:quizzy/views/parameters/parameters.dart';
 import 'package:quizzy/views/score/score.dart';
 import 'package:quizzy/views/signup/signup.dart';
 import 'package:quizzy/views/welcome/welcome.dart';
-
 import 'views/create-quiz/create_quiz_questions.dart';
 import 'views/in-game/created_game_lobby.dart';
 import 'views/in-game/joined_game_lobby.dart';
@@ -28,6 +26,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => QuizProvider()),
+        ChangeNotifierProvider(create: (_) => RoomProvider()),
 
       ],
       child: MaterialApp(

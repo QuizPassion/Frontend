@@ -4,10 +4,12 @@ import '../../../core/widgets/profile_icon.dart';
 
 class PlayerInGameCard extends StatelessWidget {
   final String playerName;
+  final String playerAvatar;
 
   const PlayerInGameCard({
     super.key,
     required this.playerName,
+    required this.playerAvatar,
   });
 
   @override
@@ -26,7 +28,7 @@ class PlayerInGameCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const ProfileIcon(),
+          ProfileIcon(imageUrl: playerAvatar),
           const SizedBox(height: 8),
           Text(
             playerName,

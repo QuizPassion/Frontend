@@ -176,4 +176,12 @@ class ApiService {
     );
     return response;
   }
+
+  // ============ JOIN GAME SESSION ============
+  Future<Response> joinGameSession(String code) async {
+    final response = await _dio.post(
+      '${Config.joinGameSessionEndpoint}?pass=$code',
+    );
+    return response;
+  }
 }

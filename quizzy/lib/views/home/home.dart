@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizzy/data/model/Room.dart';
 import 'package:quizzy/data/model/quiz_request.dart';
+import 'package:quizzy/data/model/user.dart';
+import 'package:quizzy/data/provider/room_provider.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/quizzy_text_field.dart';
@@ -10,8 +16,55 @@ import 'widgets/quiz_card_group.dart';
 import '../../data/network/api_service.dart';
 import '../../core/widgets/quizzy_scaffold.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isLoading = false;
+  
+
+
+  // ignore: non_constant_identifier_names
+  Future<String> JoinGameSession(String code) async {
+    setState(() => _isLoading = true);
+    try {
+      final response = await ApiService().joinGameSession(code);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.data);
+        final roomId = data['room_id'] as String;
+        final playersJSON = data['players'] as List<dynamic>;
+        final players = playersJSON.map((player) => UserRoom.fromJson(player)).toList();
+        for (var player in players) {
+          print('Player: ${player.userPseudo}, Image URL: ${player.image.url}');
+        }
+        print('Session créée avec succès: $roomId');
+        Provider.of<RoomProvider>(context, listen: false).setRoom(Room(
+          id : roomId,
+          players: players,
+          code: code,
+          hostId: data['host_id'],
+        ));
+        return roomId;
+      } else {
+        _showError('Erreur ${response.statusCode} lors de la création de la session.');
+        return '';
+      }
+    } catch (e) {
+      _showError('Erreur lors de la création de la session : $e');
+      return '';
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +93,27 @@ class HomePage extends StatelessWidget {
               // Join game search bar
               SearchWithQrRow(
                 hintText: 'Search and join a game',
+                controller: _searchController,
                 onQrTap: () async {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const QrScanPage()),
                   );
                   if (result != null) {
-                    // Handle the scanned result (e.g., join game with result)
                     print("Scanned QR Code: $result");
+                    _searchController.text = result;
                   }
                 },
               ),
               ElevatedButton(
                 onPressed: () {
-                    Navigator.pushNamed(context, '/joinedGameLobby');
+                  final code = _searchController.text;
+                  print(code);
+                    JoinGameSession(code).then((roomId) {
+                      if (roomId.isNotEmpty) {
+                        Navigator.pushNamed(context, '/joinedGameLobby', arguments: roomId);
+                      }
+                    });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.royalPurple,

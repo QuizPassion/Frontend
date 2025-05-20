@@ -113,13 +113,13 @@ class EndGame extends StatelessWidget {
                   // Podium layout 
                   Column(
                     children: [
-                      const PlayerInGameCard(playerName: 'Player 2'),
+                      const PlayerInGameCard(playerName: 'Player 2', playerAvatar: "",),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const [
-                          PlayerInGameCard(playerName: 'Fan2StarWars'),
-                          PlayerInGameCard(playerName: 'Player 3'),
+                          PlayerInGameCard(playerName: 'Fan2StarWars', playerAvatar: "",),
+                          PlayerInGameCard(playerName: 'Player 3', playerAvatar: "",),
                         ],
                       ),
                     ],

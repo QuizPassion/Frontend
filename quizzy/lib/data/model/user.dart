@@ -46,3 +46,17 @@ class Image {
     );
   }
 }
+
+class UserRoom {
+  final String userPseudo;
+  final Image image;
+
+  UserRoom({
+    required this.userPseudo,
+    required this.image,
+  });
+
+  UserRoom.fromJson(Map<String, dynamic> json)
+      : userPseudo = json['user_pseudo'] ?? '',
+        image = Image.fromJson(json['image'] ?? {});
+}
