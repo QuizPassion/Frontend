@@ -19,13 +19,9 @@ class RoomProvider extends ChangeNotifier {
 
   void updatePlayers(List<UserRoom> newPlayers) {
     if (_room != null) {
-      _room = Room(
-        id: _room!.id,
-        code: _room!.code,
-        players: newPlayers,
-        hostId: _room!.hostId,
-      );
+      _room!.players = newPlayers;
       notifyListeners();
     }
   }
+
 }

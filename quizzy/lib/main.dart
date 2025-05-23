@@ -4,6 +4,7 @@ import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
 import 'package:quizzy/data/provider/room_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
+import 'package:quizzy/data/provider/ws.dart';
 import 'package:quizzy/data/viewmodel/auth_view_model.dart';
 import 'package:quizzy/domain/usercases/get_user_profile.dart';
 import 'package:quizzy/views/create-quiz/all_quiz.dart';
@@ -40,8 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
-        ChangeNotifierProvider(create: (_) => QuizProvider()),
+        ChangeNotifierProvider(create: (_) => WebSocketService()),
         ChangeNotifierProvider(create: (_) => RoomProvider()),
+        ChangeNotifierProvider(create: (_) => allQuizProvider()),
 
       ],
       child: MaterialApp(
@@ -61,7 +63,6 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomePage(), // Home page after login
           '/scanQr': (context) => const QrScanPage(), // qr code scanner page
           '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
-          '/createdGameLobby': (context) => const CreatedGameLobbyPage(),
           // '/gameLoading': (context) => const GameLoading(),
           '/inGame': (context) => const InGame(),
           '/endGame': (context) => const EndGame(),
@@ -73,6 +74,17 @@ class MyApp extends StatelessWidget {
               builder: (context) => CreateQuizQuestionsPage(quizData: quizzData,),
             );
           }
+
+          if (settings.name == '/createdGameLobby') {
+            return MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                create: (_) => QuizProvider(),
+                child: const CreatedGameLobbyPage(),
+              ),
+            );
+          }
+
+
           return null; // Return null if no matching route is found
         },
       ),

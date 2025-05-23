@@ -5,9 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/network/config.dart';
 import 'package:quizzy/data/provider/room_provider.dart';
+import 'package:quizzy/data/provider/ws.dart';
 import 'package:quizzy/views/in-game/widgets/player_in_game_card.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
@@ -22,19 +21,21 @@ class JoinedGameLobbyPage extends StatefulWidget {
 }
 
 class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
-  late WebSocketChannel _channel;
-
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final room = Provider.of<RoomProvider>(context, listen: false).room;
+      print('État initial de la room: ${room?.id}');
+      print('Nombre de joueurs: ${room?.players.length}');
 
       if (room != null) {
         final roomId = room.id;
+        print('Tentative de connexion WebSocket pour la room: $roomId');
         _connectWebSocket(roomId);
       } else {
+        print('Aucune room trouvée');
         _showError('Aucune room trouvée.');
         Navigator.of(context).pushReplacementNamed('/home');
       }
@@ -50,17 +51,12 @@ class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
       return;
     }
 
-    _channel = IOWebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId'),
-      headers: {
-        'Cookie': 'jwt_token=$jwt',
-      },
-    );
+    print('JWT token trouvé, connexion au WebSocket...');
+    final wsService = context.read<WebSocketService>();
+    final url = 'ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId';
+    final headers = {'Cookie': 'jwt_token=$jwt'};
 
-    _channel.stream.listen((message) {
-      print('Message reçu : $message');
-      // Tu pourrais ajouter ici le traitement des messages
-    });
+    wsService.connect(context, url, headers, roomId);
   }
 
   Future<String?> _getJwtTokenFromCookies() async {
@@ -79,13 +75,16 @@ class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
 
   @override
   void dispose() {
-    _channel.sink.close();
+    print('Dispose de JoinedGameLobbyPage');
+    final wsService = context.read<WebSocketService>();
+    wsService.disconnect();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final room = Provider.of<RoomProvider>(context).room;
+    print('Build de JoinedGameLobbyPage - Nombre de joueurs: ${room?.players.length}');
 
     if (room == null) {
       return const Center(child: CircularProgressIndicator());
@@ -140,7 +139,6 @@ class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
             QrRow(
               codeText: room.code,
               onQrTap: () {
-                // Peut-être afficher un QR code ?
               },
             ),
 
@@ -170,7 +168,6 @@ class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
 
             const SizedBox(height: 16),
 
-            // ⚠️ Correction ici : Remplacer Expanded dans un scrollable
             Expanded(
               child: GridView.count(
                 physics: const BouncingScrollPhysics(),
@@ -178,7 +175,13 @@ class _JoinedGameLobbyPageState extends State<JoinedGameLobbyPage> {
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,
-                children: room.players.map((player) => PlayerInGameCard(playerName: player.userPseudo, playerAvatar: player.image.url)).toList(),
+                children: room.players.map((player) {
+                  print('Création d\'une carte pour le joueur: ${player.userPseudo}');
+                  return PlayerInGameCard(
+                    playerName: player.userPseudo,
+                    playerAvatar: player.image.url
+                  );
+                }).toList(),
               ),
             ),
           ],

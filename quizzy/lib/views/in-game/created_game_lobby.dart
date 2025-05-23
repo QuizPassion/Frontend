@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
 
@@ -6,18 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzy/core/widgets/confirm_exit.dart';
 import 'package:quizzy/core/widgets/quizzy_scaffold.dart';
+import 'package:quizzy/data/model/Room.dart';
+import 'package:quizzy/data/model/user.dart';
 import 'package:quizzy/data/network/config.dart';
+import 'package:quizzy/data/provider/quiz_provider.dart';
+import 'package:quizzy/data/provider/room_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
+import 'package:quizzy/data/provider/ws.dart';
 import 'package:quizzy/views/in-game/widgets/start_game_btn.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
-import '../../data/provider/quiz_provider.dart';
 import '../../data/network/api_service.dart';
 import 'widgets/player_in_game_card.dart';
 import 'qr_code_display_page.dart';
@@ -26,26 +27,36 @@ class CreatedGameLobbyPage extends StatefulWidget {
   const CreatedGameLobbyPage({super.key});
 
   @override
-  State<CreatedGameLobbyPage> createState() => _CreatedGameLobbyPageState();
+  _CreatedGameLobbyPageState createState() => _CreatedGameLobbyPageState();
 }
 
 class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   late final String code;
   late final String roomId;
-  late WebSocketChannel _channel;
   bool _isLoading = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     code = _generateCode();
     _initializeGameSession();
+
+    // Fetch quizzes when the widget is initialized
+    _searchController.addListener(() {
+      final query = _searchController.text;
+      if (query.isNotEmpty) {
+        Provider.of<allQuizProvider>(context, listen: false).filterQuizzes(query);
+      } else {
+        Provider.of<allQuizProvider>(context, listen: false).resetFilter();
+      }
+    });
   }
 
   @override
   void dispose() {
-    _channel.sink.close();
     super.dispose();
+    Provider.of<QuizProvider>(context, listen: false).clearQuiz();
   }
 
   String _generateCode() {
@@ -54,10 +65,12 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   }
 
   Future<void> _initializeGameSession() async {
+    setState(() => _isLoading = true);
     roomId = await _createGameSession();
     if (roomId.isNotEmpty) {
       await _connectWebSocket();
     }
+    setState(() => _isLoading = false);
   }
 
   Future<String> _createGameSession() async {
@@ -65,7 +78,21 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     try {
       final response = await ApiService().createGameSession(code);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
         final data = response.data['room_id'];
+        final code = response.data['code'];
+        final hostId = response.data['host_id'];
+        final players = [
+          UserRoom(userPseudo: userProvider.user!.userPseudo, image: userProvider.user!.image, userId: userProvider.user!.id.toString())
+        ];
+        final room = Room(
+          players: players,
+          id: data,
+          code: code,
+          hostId: hostId,
+        );
+        Provider.of<RoomProvider>(context, listen: false).setRoom(room);
+        print('Room ID: $data');
         print('Session créée avec succès: $data');
         return data;
       } else {
@@ -83,22 +110,17 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   Future<void> _connectWebSocket() async {
     final jwt = await _getJwtTokenFromCookies();
     if (jwt == null || jwt.isEmpty) {
-      print('JWT token not found in cookies: $jwt');
-      _showError('Erreur d\'authentification. Veuillez vous reconnecter.');
-      Navigator.of(context).pushReplacementNamed('/login');
+      _showError('Erreur d\'authentification.');
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
       return;
     }
 
-    _channel = IOWebSocketChannel.connect(
-      Uri.parse('ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId'),
-      headers: {
-        'Cookie': 'jwt_token=$jwt',
-      },
-    );
+    final wsService = context.read<WebSocketService>();
 
-    _channel.stream.listen((message) {
-      print('Message reçu : $message');
-    });
+    final url = 'ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId';
+    final headers = {'Cookie': 'jwt_token=$jwt'};
+
+    wsService.connect(context, url, headers, roomId);
   }
 
   Future<String?> _getJwtTokenFromCookies() async {
@@ -117,8 +139,11 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final quizProvider = Provider.of<QuizProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    final roomProvider = Provider.of<RoomProvider>(context);
+    final countPlayers = roomProvider.room?.players.length ?? 0;
+    final players = roomProvider.room?.players ?? [];
+
 
     return QuizzyScaffold(
       currentIndex: 8,
@@ -137,15 +162,19 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Expanded(
-                      child: Text(
-                        'Quiz on the jedi in star wars',
-                        style: TextStyle(
-                          fontFamily: AppFonts.montserrat,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.lightGrey,
-                        ),
+                    Expanded(
+                      child: Consumer<QuizProvider>(
+                        builder: (context, provider, child) {
+                          return Text(
+                            provider.quiz?.title ?? 'Aléatoire 🎲',
+                            style: const TextStyle(
+                              fontFamily: AppFonts.montserrat,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.lightGrey,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     IconButton(
@@ -157,9 +186,48 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                 const SizedBox(height: 24),
                 QuizzyTextField(
                   hintText: 'Search for a quiz',
-                  controller: quizProvider.quizNameController,
+                  controller: _searchController,
                   prefixIcon: Icons.search,
                   height: 42,
+                ),
+                Consumer<allQuizProvider>(
+                  builder: (context, provider, _) {
+                    final filteredQuizzes = provider.quizzes;
+                    if (_searchController.text.isEmpty || filteredQuizzes.isEmpty) {
+                      return const SizedBox(); // Ne rien afficher si vide
+                    }
+
+                    final itemCount = filteredQuizzes.length;
+                    final itemHeight = 48.0;
+                    final maxHeight = 200.0;
+                    final height = (itemCount * itemHeight).clamp(0, maxHeight);
+
+                    return SizedBox(
+                      height: height.toDouble(),
+                      child: ListView.builder(
+                        itemCount: filteredQuizzes.length,
+                        itemBuilder: (context, index) {
+                          final quiz = filteredQuizzes[index];
+                          return ListTile(
+                            title: Text(
+                              quiz.title,
+                              style: const TextStyle(
+                                color: AppColors.lightGrey,
+                                fontFamily: AppFonts.lato,
+                                fontSize: 16,
+                              ),
+                            ),
+                            onTap: () {
+                              _searchController.text = quiz.title;
+                              Provider.of<QuizProvider>(context, listen: false).setQuiz(quiz);
+                              provider.resetFilter();
+                              _searchController.clear();
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 const Text(
@@ -183,9 +251,9 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Players 1/10',
-                  style: TextStyle(
+                Text(
+                  "$countPlayers / 10",
+                  style: const TextStyle(
                     fontFamily: AppFonts.lato,
                     fontSize: 16,
                     color: AppColors.lightGrey,
@@ -199,9 +267,12 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                     childAspectRatio: 1,
-                    children: [
-                      PlayerInGameCard(playerName: userProvider.user!.userPseudo, playerAvatar: userProvider.user!.image.url,),
-                    ],
+                    children: players.map((player) {
+                      return PlayerInGameCard(
+                        playerName: player.userPseudo,
+                        playerAvatar: player.image.url,
+                      );
+                    }).toList(),
                   ),
                 ),
 
@@ -223,16 +294,9 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                         const SizedBox(height: 12),
                         StartGameButton(
                           onPressed: () {
-                            _channel.sink.add(jsonEncode({
-                              "type": "join",
-                              "content": {
-                                "room": roomId,
-                                "user": userProvider.user!.userPseudo,
-                              }
-                            }));
+                            _showError('Game started');
                           },
                         ),
-
                       ],
                     ),
                   ),

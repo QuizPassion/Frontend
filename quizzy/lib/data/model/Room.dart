@@ -3,7 +3,7 @@ import 'package:quizzy/data/model/user.dart';
 class Room {
   final String id;
   final String code;
-  final List<UserRoom> players;
+  List<UserRoom> players;
   final String hostId;
 
   Room({

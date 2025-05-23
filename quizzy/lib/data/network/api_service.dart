@@ -81,6 +81,11 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final data = response.data as List;
+      print('=== RÉPONSE DU SERVEUR ===');
+      print('Status code: ${response.statusCode}');
+      print('Response data: ${response.data}');
+      print('========================');
+      
       return data.map((json) => Quiz.fromJson(json)).toList();
     } else if (response.statusCode == 401) {
       throw Exception('Non autorisé : le token/cookie est manquant ou invalide.');
@@ -113,6 +118,13 @@ class ApiService {
     required String theme,
     File? avatarFile,
   }) async {
+    print('=== DONNÉES ENVOYÉES AU SERVEUR ===');
+    print('Name: $name');
+    print('Description: $description');
+    print('Theme: $theme');
+    print('Avatar file: $avatarFile');
+    print('================================');
+
     FormData formData = FormData.fromMap({
       'title': name,
       'description': description,
@@ -130,6 +142,15 @@ class ApiService {
       data: formData,
     );
 
+    print('=== RÉPONSE DU SERVEUR ===');
+    print('Status code: ${response.statusCode}');
+    print('Response data: ${response.data}');
+    print('========================');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('✅ Quiz créé avec succès');
+    } else {
+      print('❌ Erreur de création de quiz');
+    }
     return response;
   }
 

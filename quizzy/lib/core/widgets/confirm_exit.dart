@@ -50,6 +50,7 @@ Future<void> showConfirmExitDialog(BuildContext context) async {
                           Navigator.of(context).pop(); // Close dialog
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/home', (route) => false);
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.royalPurple,
