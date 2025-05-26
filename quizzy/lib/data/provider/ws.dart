@@ -73,6 +73,9 @@ class WebSocketService extends ChangeNotifier {
                 print('Format attendu: {"user_pseudo": "...", "image": {"url": "..."}}');
               }
             }
+            if (decodedMessage['type'] == 'question') {
+              Navigator.pushNamed(context, "/inGame", arguments: decodedMessage['content']);
+            }
           } catch (e) {
             print('Erreur lors du décodage du message: $e');
             print('Message qui a causé l\'erreur: $message');

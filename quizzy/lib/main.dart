@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
           '/scanQr': (context) => const QrScanPage(), // qr code scanner page
           '/joinedGameLobby': (context) => const JoinedGameLobbyPage(),
           // '/gameLoading': (context) => const GameLoading(),
-          '/inGame': (context) => const InGame(),
+          '/inGame': (context) => InGame(),
           '/endGame': (context) => const EndGame(),
         },
         onGenerateRoute: (settings) {

@@ -9,4 +9,5 @@ class Config{
   static const String myQuizzesEndpoint = "/quizz/get";
   static const String createGameSessionEndpoint = "/multiGame/createRoom";
   static const String joinGameSessionEndpoint = "/multiGame/join";
+  static const String startGameSessionEndpoint = "/multiGame/start";
 }

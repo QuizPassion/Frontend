@@ -278,8 +278,6 @@ class _HomePageState extends State<HomePage> {
 
                   final quizzes = snapshot.data!;
                   print('Nombre de quiz reçus: ${quizzes.length}');
-                  print('Premier quiz: ${quizzes.first.title}');
-                  print('Image du premier quiz: ${quizzes.first.image?.url}');
 
                   return QuizCardGroup(
                     title: 'Quiz from the community',

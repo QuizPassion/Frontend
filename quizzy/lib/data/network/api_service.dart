@@ -205,4 +205,12 @@ class ApiService {
     );
     return response;
   }
+
+  // ============= START GAME SESSION ============
+  Future<Response> startGameSession(String roomId, int quizId) async {
+    final response = await _dio.post(
+      '${Config.startGameSessionEndpoint}?room_id=$roomId&&quizz_id=$quizId',
+    );
+    return response;
+  }
 }

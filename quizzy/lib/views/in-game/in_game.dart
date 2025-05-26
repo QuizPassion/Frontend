@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/model/question.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/confirm_exit.dart';
@@ -15,6 +16,7 @@ class InGame extends StatefulWidget {
 
 class _InGameState extends State<InGame> {
   bool _hasAnswered = false;
+  bool _loaded = false;
 
   void _onConfirmAnswer() {
     setState(() {
@@ -23,7 +25,23 @@ class _InGameState extends State<InGame> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_loaded) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is Map<String, dynamic>) {
+        final question = Question.fromJson(args);
+        print('Question : ${question.text}');
+      }
+
+      _loaded = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return QuizzyScaffold(
       currentIndex: 8,
       onTap: (_) {

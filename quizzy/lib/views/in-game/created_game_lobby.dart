@@ -133,6 +133,26 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     return jwtCookie.value.isNotEmpty ? jwtCookie.value : null;
   }
 
+
+  void _startGame() {
+    final quizProvider = Provider.of<QuizProvider>(context, listen: false);
+    if (quizProvider.quiz == null) {
+      _showError('Please select a quiz before starting the game.');
+      return;
+    }
+
+    // Fait une requête http pour démarrer le jeu
+    ApiService().startGameSession(roomId, quizProvider.quiz!.id).then((response) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _showError('Game started successfully');
+      } else {
+        _showError('Failed to start the game. Please try again.');
+      }
+    }).catchError((error) {
+      _showError('An error occurred while starting the game: $error');
+    });
+  }
+
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
@@ -294,7 +314,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                         const SizedBox(height: 12),
                         StartGameButton(
                           onPressed: () {
-                            _showError('Game started');
+                            _startGame();
                           },
                         ),
                       ],
