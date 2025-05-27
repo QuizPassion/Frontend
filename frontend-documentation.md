@@ -5,8 +5,7 @@
 </div>
 
 ---
-This document details the frontend structure of the **Quizzy** Flutter mobile application. It covers the project's folder structure, widget usage, and asset organization.
-
+This document details the frontend structure of the **Quizzy** Flutter mobile application. It covers the project's folder structure, coding standards, widget usage, and asset organization.
 
 ## Project Structure
 
@@ -59,7 +58,34 @@ quizzy/
 │           └── widgets/
 │               └── parameter_card.dart
 ```
+<img src="documentation-img/folder-feature.png" alt="quizzy-logo" style="height:500px;" />
 
+## Flutter Coding Standards
+
+#### Widget Structure
+
+- **Use `StatelessWidget` and `StatefulWidget` Appropriately**  
+  Choose `StatelessWidget` when the widget does not manage any internal state, and `StatefulWidget` when the widget needs to manage dynamic state changes.
+
+- **Extract Reusable UI Components into Custom Widgets**  
+  Avoid code duplication by grouping frequently used UI elements or logic into separate reusable widgets.
+
+#### Code Optimization
+
+- **Use `const` Constructors Wherever Possible**  
+  Use the `const` keyword to improve performance and reduce unnecessary rebuilds when widget trees contain static configurations.
+
+#### Naming Conventions
+
+- **Class Names: `UpperCamelCase`**  
+  Example: `MyHomePage`, `UserProfileCard`
+
+- **Variable and Function Names: `lowerCamelCase`**  
+  Example: `userName`, `fetchUserData()`
+
+#### Code Style
+
+- **Default** flutter code **indentation**
 
 ## Core UI & Styling
 
