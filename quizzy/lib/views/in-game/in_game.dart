@@ -1,11 +1,15 @@
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzy/data/model/question.dart';
+import 'package:quizzy/data/provider/user_provider.dart';
+import 'package:quizzy/data/provider/ws.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
 import '../../core/widgets/confirm_exit.dart';
 import '../../core/widgets/quizzy_scaffold.dart';
-import 'widgets/answer_question_card.dart';
-import 'widgets/answered_question_card.dart';
 
 class InGame extends StatefulWidget {
   const InGame({super.key});
@@ -15,14 +19,9 @@ class InGame extends StatefulWidget {
 }
 
 class _InGameState extends State<InGame> {
-  bool _hasAnswered = false;
   bool _loaded = false;
-
-  void _onConfirmAnswer() {
-    setState(() {
-      _hasAnswered = true;
-    });
-  }
+  Question? question;
+  final Set<int> selectedAnswerIds = {};
 
   @override
   void didChangeDependencies() {
@@ -31,21 +30,48 @@ class _InGameState extends State<InGame> {
     if (!_loaded) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args != null && args is Map<String, dynamic>) {
-        final question = Question.fromJson(args);
-        print('Question : ${question.text}');
+        question = Question.fromJson(args);
+        print('Question reçue : ${question!.text}');
       }
 
       _loaded = true;
     }
   }
 
+  void toggleAnswer(int answerId) {
+    setState(() {
+      if (selectedAnswerIds.contains(answerId)) {
+        selectedAnswerIds.remove(answerId);
+      } else {
+        selectedAnswerIds.add(answerId);
+      }
+
+      print('Réponses sélectionnées : $selectedAnswerIds');
+
+      // ➕ Ici tu peux appeler ta fonction WebSocket :
+      // sendAnswersToBackend(selectedAnswerIds.toList());
+    });
+  }
+
+  void sendAnswersToBackend(List<int> answers) {
+    // Implémente ici la logique pour envoyer les réponses au backend via WebSocket
+    // Par exemple :
+    Provider.of<WebSocketService>(context, listen: false).send(jsonEncode({
+      'type': 'answer',
+      'content': {
+        'player_id': Provider.of<UserProvider>(context, listen: false).user?.id.toString(),
+        'answer_id': answers,
+        'question_id': question?.id,
+        'time': 5, // Exemple de temps, à adapter selon tes besoins
+      },
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return QuizzyScaffold(
       currentIndex: 8,
-      onTap: (_) {
-      },
+      onTap: (_) {},
       disabled: true,
       body: Stack(
         children: [
@@ -85,26 +111,75 @@ class _InGameState extends State<InGame> {
                 ),
                 const SizedBox(height: 20),
 
-                // Dynamic card
-                _hasAnswered
-                    ? const AnsweredQuestionCard()
-                    : AnswerQuestionCard(onConfirm: _onConfirmAnswer),
+                if (question != null)
+                  Text(
+                    question!.text,
+                    style: TextStyle(
+                      fontFamily: AppFonts.lato,
+                      fontSize: 18,
+                      color: AppColors.lightGrey,
+                    ),
+                  )
+                else
+                  const CircularProgressIndicator(),
+
+                const SizedBox(height: 20),
+
+                // Réponses multiples
+                if (question != null)
+                  ...question!.choices.map((choice) {
+                    final isSelected = selectedAnswerIds.contains(choice.id);
+
+                    return GestureDetector(
+                      onTap: () => toggleAnswer(choice.id),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.royalPurple : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                              color: isSelected ? Colors.white : Colors.grey,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                choice.text,
+                                style: TextStyle(
+                                  fontFamily: AppFonts.lato,
+                                  fontSize: 16,
+                                  color: isSelected ? Colors.white : Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList()
+                else
+                  const CircularProgressIndicator(),
 
                 const Spacer(),
 
                 ElevatedButton(
                   onPressed: () {
-                      Navigator.pushNamed(context, '/endGame');
+                    // Ici tu peux envoyer les réponses sélectionnées au backend
+                    sendAnswersToBackend(selectedAnswerIds.toList());
+                    print('Réponses envoyées : $selectedAnswerIds');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.dynamicOrange,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  child: const Text(
-                    'temporary',
-                  ),
+                  child: const Text('temporary'),
                 ),
-                // Quit Game Button
+                const SizedBox(height: 12),
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

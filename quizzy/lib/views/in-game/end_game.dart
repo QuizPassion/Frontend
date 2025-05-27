@@ -130,7 +130,7 @@ class EndGame extends StatelessWidget {
                   StartGameButton(
                     text: 'Go to home page',
                     onPressed: () {
-                      Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/createdGameLobby');
                     },
                   ),
                 ],

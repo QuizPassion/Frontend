@@ -76,6 +76,10 @@ class WebSocketService extends ChangeNotifier {
             if (decodedMessage['type'] == 'question') {
               Navigator.pushNamed(context, "/inGame", arguments: decodedMessage['content']);
             }
+            if (decodedMessage['type'] == 'score') {
+              print('Réponse reçue: ${decodedMessage['content']}');
+              Navigator.pushNamed(context, "/endGame", arguments: decodedMessage['content']);
+            }
           } catch (e) {
             print('Erreur lors du décodage du message: $e');
             print('Message qui a causé l\'erreur: $message');

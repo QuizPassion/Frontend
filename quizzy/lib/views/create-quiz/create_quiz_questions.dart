@@ -84,6 +84,7 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        _quizId = response.data['quiz_id'];
         debugPrint('✅ Quiz créé avec ID $_quizId');
       } else {
         debugPrint('❌ Erreur de création de quiz');
