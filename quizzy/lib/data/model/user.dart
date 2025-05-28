@@ -44,7 +44,7 @@ class UserRoom {
     return UserRoom(
       userPseudo: json['user_pseudo'] ?? '', // Si user_pseudo est null, assigner une chaîne vide
       image: ImageQ.fromJson(json['image']), // Assurez-vous de gérer l'objet Image séparément
-      userId: json['user_id'] ?? '', // Si user_id est null, assigner une chaîne vide
+      userId: json['user_id'].toString(), // Si user_id est null, assigner une chaîne vide
     );
   }
 }

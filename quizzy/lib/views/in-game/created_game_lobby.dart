@@ -32,17 +32,22 @@ class CreatedGameLobbyPage extends StatefulWidget {
 
 class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   late final String code;
-  late final String roomId;
+  late String roomId;
   bool _isLoading = false;
+  bool _isInitialized = false;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     code = _generateCode();
-    _initializeGameSession();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_isInitialized) {
+        _initializeGameSession();
+        _isInitialized = true;
+      }
+    });
 
-    // Fetch quizzes when the widget is initialized
     _searchController.addListener(() {
       final query = _searchController.text;
       if (query.isNotEmpty) {
@@ -53,10 +58,10 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     });
   }
 
+
   @override
   void dispose() {
     super.dispose();
-    Provider.of<QuizProvider>(context, listen: false).clearQuiz();
   }
 
   String _generateCode() {

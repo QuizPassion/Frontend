@@ -49,10 +49,15 @@ class _HomePageState extends State<HomePage> {
     try {
       final response = await ApiService().joinGameSession(code);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print(
+          '===========================\n'
+          'Réponse de l\'API: ${response.data}\n'
+          '==========================='
+        );
         final data = jsonDecode(response.data);
-        final roomId = data['room_id'] as String;
+        final roomId = data['room_id'].toString();
         final playersJSON = data['players'] as List<dynamic>;
-        final hostId = data['host_id'] as String;
+        final hostId = data['host_id'].toString();
         final players = playersJSON.map((player) => UserRoom.fromJson(player)).toList();
         for (var player in players) {
           print('Player: ${player.userPseudo}, Image URL: ${player.image.url}');

@@ -44,6 +44,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => WebSocketService()),
         ChangeNotifierProvider(create: (_) => RoomProvider()),
         ChangeNotifierProvider(create: (_) => allQuizProvider()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
+
 
       ],
       child: MaterialApp(
