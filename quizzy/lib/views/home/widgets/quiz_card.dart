@@ -45,12 +45,17 @@ class QuizCardSmall extends StatelessWidget {
             },
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              color: AppColors.lightGrey,
-              fontFamily: AppFonts.lato,
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 14, // réduit un peu
+                color: AppColors.lightGrey,
+                fontFamily: AppFonts.lato,
+              ),
             ),
           ),
         ],
