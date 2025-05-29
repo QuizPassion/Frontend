@@ -151,7 +151,7 @@ class _ParametersPageState extends State<ParametersPage> {
                             text: 'Déconnexion',
                             onTap: () {
                               // Déconnexion et redirection vers la page de bienvenue
-                              Navigator.pushNamed(context, '/welcome');
+                              Navigator.pushNamed(context, '/');
                             },
                           ),
                         ],
