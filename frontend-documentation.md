@@ -132,8 +132,8 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget                  | Preview                                                           | Purpose                                                  |
 |------------------------|-------------------------------------------------------------------|----------------------------------------------------------|
-| **quiz_card.dart**      | <img src="documentation-img/quiz_card.png" width="250px" />      | Card widget showing a quiz’s name, thumbnail, and quick info. <br>**Props:**<br>- `String label`<br>- `String? imageUrl` |
-| **quiz_card_group.dart**| <img src="documentation-img/quiz_card_group.png" width="250px" />| Groups quiz cards by category or filter. <br>**Props:**<br>- `String title`<br>- `List<QuizCardSmall> cards` |
+| **quiz_card.dart**      | <img src="documentation-img/quizz-card.png" width="100px" />      | Card widget showing a quiz’s name, thumbnail, and quick info. <br>**Props:**<br>- `String label`<br>- `String? imageUrl` |
+| **quiz_card_group.dart**| <img src="documentation-img/quizz-card-group.png" width="200px" />| Groups quiz cards by category or filter. <br>**Props:**<br>- `String title`<br>- `List<QuizCardSmall> cards` |
 
 ---
 
