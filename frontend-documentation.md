@@ -104,16 +104,16 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget                       | Preview                             | Purpose |
 |-----------------------------|-------------------------------------|---------|
-| **app_bar.dart**            | <img src="documentation-img/folder-feature.png" height="300px"/> | Custom app bar widget used in multiple screens. |
-| **nav_bar.dart**            | <img src="documentation-img/folder-feature.png" height="300px"/> | Bottom navigation bar with app-wide navigation. |
-| **background_decoration.dart** | <img src="documentation-img/folder-feature.png" height="300px"/> | Applies themed background decoration (e.g., gradients or images). |
-| **confirm_exit.dart**       | <img src="documentation-img/folder-feature.png" height="300px"/> | Displays a confirmation dialog before exiting a screen or the app. |
-| **login_signup_btn.dart**   | <img src="documentation-img/folder-feature.png" height="300px"/> | Styled button used on login and signup screens. |
-| **profile_icon.dart**       | <img src="documentation-img/folder-feature.png" height="300px"/> | Widget representing a user's avatar or profile. |
-| **quizzy_scaffold.dart**    | <img src="documentation-img/folder-feature.png" height="300px"/> | Custom scaffold for consistent page layout. |
-| **quizzy_text_field.dart**  | <img src="documentation-img/folder-feature.png" height="300px"/> | Styled text field widget used across the app. |
-| **save_button.dart**        | <img src="documentation-img/folder-feature.png" height="300px"/> | Consistent save button used in forms or settings. |
-| **search_with_qr.dart**     | <img src="documentation-img/folder-feature.png" height="300px"/> | Composite widget for searching quizzes with optional QR scanning. |
+| **app_bar.dart**            | <img src="documentation-img/app-bar.png" width="300px"/> | Custom app bar widget used in multiple screens. |
+| **nav_bar.dart**            | <img src="documentation-img/nav-bar.png" width="300px"/> | Bottom navigation bar with app-wide navigation. |
+| **background_decoration.dart** | <img src="documentation-img/bg-decoration.png" width="200px"/> | Applies themed background decoration (e.g., gradients or images). |
+| **confirm_exit.dart**       | <img src="documentation-img/confirm-exit.png" width="200px"/> | Displays a confirmation dialog before exiting a screen or the app. |
+| **login_signup_btn.dart**   | <img src="documentation-img/login-signup.png" width="300px"/> | Styled button used on login and signup screens. |
+| **profile_icon.dart**       | <img src="documentation-img/profile-icon.png" width="150px"/> | Widget representing a user's avatar or profile. |
+| **quizzy_scaffold.dart**    |  | Custom scaffold for consistent page layout. |
+| **quizzy_text_field.dart**  | <img src="documentation-img/text.png" width="300px"/> | Styled text field widget used across the app. |
+| **save_button.dart**        | <img src="documentation-img/save.png" width="250px"/> | Consistent save button used in forms or settings. |
+| **search_with_qr.dart**     | <img src="documentation-img/search_with_qr.png" width="300px"/> | Composite widget for searching quizzes with optional QR scanning. |
 
 ---
 
@@ -123,8 +123,8 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget                     | Preview                                                                 | Purpose                                              |
 |---------------------------|-------------------------------------------------------------------------|------------------------------------------------------|
-| **create_question_card.dart** | <img src="documentation-img/create_question_card.png" width="400px" /> | UI card to add a new quiz question dynamically. <br>**Props:**<br>- `QuestionData data`<br>- `VoidCallback onCopy` |
-| **created_quizz_card.dart**   | <img src="documentation-img/created_quizz_card.png" width="400px" />   | Displays a preview or summary of a created quiz. <br>**Props:**<br>- `String quizName`<br>- `String quizDescription`<br>- `String? quizImageUrl` |
+| **create_question_card.dart** | <img src="documentation-img/create-question.png" width="250px" /> | UI card to add a new quiz question dynamically. <br>**Props:**<br>- `QuestionData data`<br>- `VoidCallback onCopy` |
+| **created_quizz_card.dart**   | <img src="documentation-img/created-quiz.png" width="250px" />   | Displays a preview or summary of a created quiz. <br>**Props:**<br>- `String quizName`<br>- `String quizDescription`<br>- `String? quizImageUrl` |
 
 ---
 
@@ -132,8 +132,8 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget                  | Preview                                                           | Purpose                                                  |
 |------------------------|-------------------------------------------------------------------|----------------------------------------------------------|
-| **quiz_card.dart**      | <img src="documentation-img/quiz_card.png" width="400px" />      | Card widget showing a quiz’s name, thumbnail, and quick info. <br>**Props:**<br>- `String label`<br>- `String? imageUrl` |
-| **quiz_card_group.dart**| <img src="documentation-img/quiz_card_group.png" width="400px" />| Groups quiz cards by category or filter. <br>**Props:**<br>- `String title`<br>- `List<QuizCardSmall> cards` |
+| **quiz_card.dart**      | <img src="documentation-img/quiz_card.png" width="250px" />      | Card widget showing a quiz’s name, thumbnail, and quick info. <br>**Props:**<br>- `String label`<br>- `String? imageUrl` |
+| **quiz_card_group.dart**| <img src="documentation-img/quiz_card_group.png" width="250px" />| Groups quiz cards by category or filter. <br>**Props:**<br>- `String title`<br>- `List<QuizCardSmall> cards` |
 
 ---
 
@@ -141,10 +141,10 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget                         | Preview                                                                | Purpose                                          |
 |-------------------------------|------------------------------------------------------------------------|--------------------------------------------------|
-| **answer_question_card.dart**   | <img src="documentation-img/answer_question_card.png" width="400px" />   | Card that allows a player to select their answer. <br>**Props:**<br>- `VoidCallback onConfirm` |
-| **answered_question_card.dart**| <img src="documentation-img/answered_question_card.png" width="400px" /> | Shows the answer and whether it was correct. |
-| **player_in_game_card.dart**   | <img src="documentation-img/player_in_game_card.png" width="400px" />   | Displays a player's score and progress in a game. <br>**Props:**<br>- `String playerName` |
-| **start_game_btn.dart**        | <img src="documentation-img/start_game_btn.png" width="400px" />        | Button to begin the quiz game. <br>**Props:**<br>- `VoidCallback onPressed`<br>- `String text` |
+| **answer_question_card.dart**   | <img src="documentation-img/question.png" width="250px" />   | Card that allows a player to select their answer. <br>**Props:**<br>- `VoidCallback onConfirm` |
+| **answered_question_card.dart**| <img src="documentation-img/answered-question.png" width="250px" /> | Shows the answer and whether it was correct. |
+| **player_in_game_card.dart**   | <img src="documentation-img/player.png" width="150px" />   | Displays a player's score and progress in a game. <br>**Props:**<br>- `String playerName` |
+| **start_game_btn.dart**        | <img src="documentation-img/start.png" width="200px" />        | Button to begin the quiz game. <br>**Props:**<br>- `VoidCallback onPressed`<br>- `String text` |
 
 ---
 
@@ -152,7 +152,7 @@ Holds paths to asset images for easy access and maintainability.
 
 | Widget              | Preview                                                             | Purpose                                           |
 |--------------------|---------------------------------------------------------------------|---------------------------------------------------|
-| **parameter_card.dart** | <img src="documentation-img/parameter_card.png" width="400px" /> | Displays and allows modification of app/user settings. <br>**Props:**<br>- `IconData icon`<br>- `String text`<br>- `VoidCallback onTap` |
+| **parameter_card.dart** | <img src="documentation-img/parameters.png" width="250px" /> | Displays and allows modification of app/user settings. <br>**Props:**<br>- `IconData icon`<br>- `String text`<br>- `VoidCallback onTap` |
 
 ---
 
