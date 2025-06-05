@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzy/core/widgets/search_with_qr.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import 'package:quizzy/data/provider/quiz_provider.dart';
 import 'package:quizzy/data/provider/user_provider.dart';
@@ -11,7 +10,6 @@ import 'package:quizzy/views/create-quiz/create_quiz.dart';
 import 'package:quizzy/views/home/home.dart';
 import 'package:quizzy/views/home/qr_scanner_page.dart';
 import 'package:quizzy/views/in-game/end_game.dart';
-// import 'package:quizzy/views/in-game/game_loading.dart';
 import 'package:quizzy/views/in-game/in_game.dart';
 import 'package:quizzy/views/login/login.dart';
 import 'package:quizzy/views/parameters/parameters.dart';
