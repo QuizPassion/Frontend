@@ -48,12 +48,12 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => const WelcomePage(), // Page d'accueil ou première page
-          '/login': (context) => const LoginPage(),
-          '/signup': (context) => const SignUpPage(),
-          '/parameters': (context) => const ParametersPage(), // Page des paramètres
-          '/allQuiz': (context) => const AllQuizPage(), // Page des quiz
-          '/createQuiz': (context) => const CreateQuizPage(), // Page de création de quiz
+          '/': (context) => const WelcomePage(), // Welcome page, user can choose to login or signup
+          '/login': (context) => const LoginPage(), // Login page, user can login 
+          '/signup': (context) => const SignUpPage(), // Login page, user can login 
+          '/parameters': (context) => const ParametersPage(), // Parameters page, user can change their parameters
+          '/allQuiz': (context) => const AllQuizPage(), // Page were user can see all the quizzes they've created
+          '/createQuiz': (context) => const CreateQuizPage(), // Page were the user can create a quiz
           '/score': (context) => const ScorePage(), // Score page
           '/home': (context) => const HomePage(), // Home page after login
           '/scanQr': (context) => const QrScanPage(), // qr code scanner page
