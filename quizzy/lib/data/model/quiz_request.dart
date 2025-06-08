@@ -3,6 +3,7 @@ class Quiz {
   final String title;
   final String description;
   final String theme;
+  final int creatorId;
   final QuizImage? image;
 
   Quiz({
@@ -10,6 +11,7 @@ class Quiz {
     required this.title,
     required this.description,
     required this.theme,
+    required this.creatorId,
     this.image,
   });
 
@@ -19,6 +21,7 @@ class Quiz {
       title: json['Title'],
       description: json['Description'],
       theme: json['Theme'],
+      creatorId: json['CreatorID'],
       image: json['Image'] != null && json['Image']['url'] != null
           ? QuizImage.fromJson(json['Image'])
           : null,

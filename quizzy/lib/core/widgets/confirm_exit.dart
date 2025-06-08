@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quizzy/data/provider/ws.dart';
 import '../app_colors.dart';
 import '../app_fonts.dart';
 
@@ -48,8 +50,10 @@ Future<void> showConfirmExitDialog(BuildContext context) async {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop(); // Close dialog
+                          Provider.of<WebSocketService>(context, listen: false).disconnect();
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/home', (route) => false);
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.royalPurple,

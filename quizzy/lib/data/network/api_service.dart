@@ -12,7 +12,7 @@ class ApiService {
   static final ApiService _instance = ApiService._internal();
 
   late final Dio _dio;
-  final CookieJar _cookieJar = CookieJar(); // En mémoire uniquement
+  final CookieJar cookieJar = CookieJar(); // En mémoire uniquement
 
   factory ApiService() {
     return _instance;
@@ -26,7 +26,7 @@ class ApiService {
     );
 
     _dio = Dio(options);
-    _dio.interceptors.add(CookieManager(_cookieJar));
+    _dio.interceptors.add(CookieManager(cookieJar));
   }
 
   // =========== LOGIN ============
@@ -81,6 +81,11 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final data = response.data as List;
+      print('=== RÉPONSE DU SERVEUR ===');
+      print('Status code: ${response.statusCode}');
+      print('Response data: ${response.data}');
+      print('========================');
+      
       return data.map((json) => Quiz.fromJson(json)).toList();
     } else if (response.statusCode == 401) {
       throw Exception('Non autorisé : le token/cookie est manquant ou invalide.');
@@ -92,7 +97,7 @@ class ApiService {
 
   // ============ FETCH USER PROFILE ============
   Future<Response> getUserProfile() async {
-    final cookies = await _cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
+    final cookies = await cookieJar.loadForRequest(Uri.parse(Config.baseUrl));
     print('Cookies envoyés pour récupérer le user: $cookies');
 
     final response = await _dio.get('${Config.userProfileEndpoint}');
@@ -113,6 +118,13 @@ class ApiService {
     required String theme,
     File? avatarFile,
   }) async {
+    print('=== DONNÉES ENVOYÉES AU SERVEUR ===');
+    print('Name: $name');
+    print('Description: $description');
+    print('Theme: $theme');
+    print('Avatar file: $avatarFile');
+    print('================================');
+
     FormData formData = FormData.fromMap({
       'title': name,
       'description': description,
@@ -130,6 +142,15 @@ class ApiService {
       data: formData,
     );
 
+    print('=== RÉPONSE DU SERVEUR ===');
+    print('Status code: ${response.statusCode}');
+    print('Response data: ${response.data}');
+    print('========================');
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('✅ Quiz créé avec succès');
+    } else {
+      print('❌ Erreur de création de quiz');
+    }
     return response;
   }
 
@@ -167,5 +188,29 @@ class ApiService {
       print('Erreur : ${response.statusCode}');
       throw Exception('Erreur serveur : ${response.statusCode}');
     }
+  }
+
+  // ============ CREATE GAME SESSION ============
+  Future<Response> createGameSession(String code) async {
+    final response = await _dio.post(
+      '${Config.createGameSessionEndpoint}?code=$code',
+    );
+    return response;
+  }
+
+  // ============ JOIN GAME SESSION ============
+  Future<Response> joinGameSession(String code) async {
+    final response = await _dio.post(
+      '${Config.joinGameSessionEndpoint}?pass=$code',
+    );
+    return response;
+  }
+
+  // ============= START GAME SESSION ============
+  Future<Response> startGameSession(String roomId, int quizId) async {
+    final response = await _dio.post(
+      '${Config.startGameSessionEndpoint}?room_id=$roomId&&quizz_id=$quizId',
+    );
+    return response;
   }
 }

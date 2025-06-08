@@ -1,7 +1,7 @@
 // ignore_for_file: implementation_imports
 
-import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzy/data/model/image.dart';
 import 'package:quizzy/data/network/api_service.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
@@ -15,22 +15,41 @@ class CreateQuizQuestionsPage extends StatefulWidget {
   const CreateQuizQuestionsPage({super.key, required this.quizData});
   final Map<String, dynamic> quizData;
 
+
   @override
   State<CreateQuizQuestionsPage> createState() => _CreateQuizQuestionsPageState();
 }
 
 class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
+  final TextEditingController questionController = TextEditingController();
+
+
   final List<QuestionData> _questions = [
-    QuestionData(titleController: TextEditingController(), options: [])
+    QuestionData(
+      
+      options: [
+        OptionData(isCorrect: false, text: ''),
+        OptionData(isCorrect: false, text: ''),
+      ], question: '',
+    ),
+    QuestionData(
+      options: [
+        OptionData(isCorrect: false, text: ''),
+        OptionData(isCorrect: false, text: ''),
+      ], question: '',
+    ),
   ];
 
-  void _addQuestion({QuestionData? copyFrom}) {
+  void _addQuestion() {
     setState(() {
-      if (copyFrom != null) {
-        _questions.add(QuestionData.clone(copyFrom));
-      } else {
-        _questions.add(QuestionData(titleController: TextEditingController(), options: []));
-      }
+      _questions.add(
+        QuestionData(
+          options: [
+            OptionData(isCorrect: false, text: ''),
+            OptionData(isCorrect: false, text: ''),
+          ], question: '',
+        ),
+      );
     });
   }
 
@@ -41,6 +60,11 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
   }
 
   int? _quizId;
+  String? _quizName;
+  ImageQ? _quizImage;
+  String? _quizCreatorId;
+  String? _quizTheme;
+  String? _quizDescription;
 
   @override
   void initState() {
@@ -48,20 +72,19 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
   }
 
   Future<void> _createQuizFromData() async {
+    // Récupération des données du quiz (nom, description, thème, image)
     final data = widget.quizData;
 
     try {
       final response = await ApiService().createQuiz(
-        name: data['name'],
+        name: data['quiz_name'],
         description: data['description'],
         theme: data['theme'],
-        avatarFile: data['image'], // si besoin tu peux uploader ici
+        avatarFile: data['image'],
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        setState(() {
-          _quizId = response.data['quiz_id'];
-        });
+        _quizId = response.data['quiz_id'];
         debugPrint('✅ Quiz créé avec ID $_quizId');
       } else {
         debugPrint('❌ Erreur de création de quiz');
@@ -74,13 +97,12 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
 
   // Fonction pour envoyer les questions à l'API
   Future<void> _createQuestionFromData() async {
-    final int? quizId = _quizId; 
 
     for (var question in _questions) {
       List<Map<String, dynamic>> options = [];
       for (var i = 0; i < question.options.length; i++) {
         options.add({
-          'text': question.options[i].textController.text.trim(),
+          'text': question.options[i].text,
           'isCorrect': question.options[i].isCorrect,
         });
       }
@@ -88,19 +110,18 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       // Envoi de la question et des options à l'API
       try {
         final response = await ApiService().createQuestion(
-          quizId: quizId.toString(),  // Envoie quizId comme string si l'API l'attend sous forme de chaîne
-          question: question.titleController.text.trim(),
+          quizId: _quizId.toString(),
+          question: question.question,
           options: options,
         );
 
         // Log le statusCode et body pour avoir plus de détails
         print("Status Code: ${response.statusCode}");
-        print("Response Body: ${response.body}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           debugPrint('✅ Question ajoutée');
         } else {
-          debugPrint('❌ Erreur lors de l\'ajout de la question. Response: ${response.body}');
+          debugPrint('❌ Erreur lors de l\'ajout de la question. Response: ${response.data}');
         }
       } catch (e) {
         debugPrint('❌ Erreur lors de l\'ajout de la question : $e');
@@ -141,7 +162,7 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: CreateQuestionCard(
                     data: data,
-                    onCopy: () => _addQuestion(copyFrom: data),
+                    onCopy: () => _addQuestion(),
                     onDelete: () => _removeQuestion(index),
                   ),
                 );
@@ -203,9 +224,5 @@ class _CreateQuizQuestionsPageState extends State<CreateQuizQuestionsPage> {
       ),
     );
   }
-}
-
-extension on Response {
-  get body => null;
 }
 
