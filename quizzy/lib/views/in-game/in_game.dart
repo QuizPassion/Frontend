@@ -105,7 +105,7 @@ class _InGameState extends State<InGame> {
                   '1/20 joueurs ont répondu',
                   style: TextStyle(
                     fontFamily: AppFonts.lato,
-                    fontSize: 14,
+                    fontSize: 16,
                     color: AppColors.lightGrey,
                   ),
                 ),

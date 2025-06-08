@@ -17,6 +17,8 @@ import 'package:cookie_jar/cookie_jar.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
+import '../../core/widgets/confirm_exit.dart';
+import '../../core/widgets/quizzy_scaffold.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import '../../data/network/api_service.dart';

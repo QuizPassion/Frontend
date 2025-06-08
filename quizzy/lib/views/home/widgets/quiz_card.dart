@@ -14,14 +14,14 @@ class QuizCardSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Vérifie si l'URL de l'image est non vide et valide
+    // check if imageUrl is null or empty, and use a default image if it is
     final imageToDisplay = imageUrl?.isNotEmpty == true
-        ? imageUrl // Si l'URL n'est pas vide, utiliser l'URL donnée
+        ? imageUrl // if the imageUrl is valid, use it
         : 'https://res.cloudinary.com/dxk9t394b/image/upload/v1745005273/quiz_images/etienne/profil/1590dd94-83dc-43eb-b94a-f1be2eeea65b.png'; // Image par défaut
 
     return Container(
-      width: 85,
-      height: 85,
+      width: 95,
+      height: 95,
       decoration: BoxDecoration(
         gradient: AppColors.gradientTop2Btm,
         borderRadius: BorderRadius.circular(5),
@@ -35,9 +35,9 @@ class QuizCardSmall extends StatelessWidget {
             height: 48,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
-              // En cas d'erreur, afficher une image par défaut
+              // if error occurs while loading the image, display a default image
               return Image.asset(
-                'assets/images/default_image.png', // Remplace par ton image par défaut
+                'assets/images/default_image.png', // replace with your default image path
                 width: 48,
                 height: 48,
                 fit: BoxFit.contain,
@@ -45,12 +45,17 @@ class QuizCardSmall extends StatelessWidget {
             },
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              color: AppColors.lightGrey,
-              fontFamily: AppFonts.lato,
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 16, 
+                color: AppColors.lightGrey,
+                fontFamily: AppFonts.lato,
+              ),
             ),
           ),
         ],
