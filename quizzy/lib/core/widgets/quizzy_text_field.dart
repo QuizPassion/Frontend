@@ -9,7 +9,7 @@ class QuizzyTextField extends StatelessWidget {
   final double height;
   final int? maxLines;
   final int? minLines;
-  final TextEditingController controller;  // Ajoute le controller ici
+  final TextEditingController controller; 
 
   const QuizzyTextField({
     super.key,
@@ -19,7 +19,7 @@ class QuizzyTextField extends StatelessWidget {
     this.height = 42,
     this.maxLines = 1,
     this.minLines,
-    required this.controller,  // Assure-toi que ce paramètre est requis
+    required this.controller,  
   });
 
   @override
@@ -28,7 +28,7 @@ class QuizzyTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
-        controller: controller,  // Assure-toi de lier le controller ici
+        controller: controller,  
         maxLines: maxLines,
         minLines: minLines,
         style: const TextStyle(

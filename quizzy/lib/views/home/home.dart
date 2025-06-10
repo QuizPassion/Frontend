@@ -131,27 +131,27 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
-              ElevatedButton(
-                onPressed: () {
-                  final code = _searchController.text;
-                  print(code);
-                    JoinGameSession(code).then((roomId) {
-                      if (roomId.isNotEmpty) {
-                        Navigator.pushNamed(context, '/joinedGameLobby', arguments: roomId);
-                      }
-                    });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.royalPurple,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: const Text(
-                  'temporary',
-                  style: TextStyle(
-                    color: AppColors.lightGrey
-                  ),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     final code = _searchController.text;
+              //     print(code);
+              //       JoinGameSession(code).then((roomId) {
+              //         if (roomId.isNotEmpty) {
+              //           Navigator.pushNamed(context, '/joinedGameLobby', arguments: roomId);
+              //         }
+              //       });
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: AppColors.royalPurple,
+              //     padding: const EdgeInsets.symmetric(vertical: 12),
+              //   ),
+              //   child: const Text(
+              //     'temporary',
+              //     style: TextStyle(
+              //       color: AppColors.lightGrey
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 8),
               const Text(
                 'ou',
@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                 width: 350,
                 height: 42,
                 child: ElevatedButton.icon(
+                  key: const Key('create_game_button'),
                   onPressed: () {
                     Navigator.pushNamed(context, '/createdGameLobby');
                   },
@@ -220,7 +221,7 @@ class _HomePageState extends State<HomePage> {
               builder: (context, provider, _) {
                 final filteredQuizzes = provider.quizzes;
                 if (_searchQuizController.text.isEmpty || filteredQuizzes.isEmpty) {
-                  return const SizedBox(); // Ne rien afficher si vide
+                  return const SizedBox(); // don't show the list if empty 
                 }
                 return Container(
                   margin: const EdgeInsets.only(top: 8),
@@ -237,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   child: ListView.builder(
-                    shrinkWrap: true, // Important pour que ça s'affiche bien dans un scroll
+                    shrinkWrap: true,
                     itemCount: filteredQuizzes.length,
                     itemBuilder: (context, index) {
                       final quiz = filteredQuizzes[index];
@@ -250,11 +251,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         onTap: () {
-                          // Action si l'utilisateur clique sur un quiz suggéré
+                          // action if the user selects a suggested quiz
                           print("Quiz sélectionné: ${quiz.title}");
-                          // Tu pourrais naviguer vers le quiz ou remplir le champ avec le titre :
                           _searchQuizController.text = quiz.title;
-                          provider.resetFilter(); // Masquer la liste
+                          provider.resetFilter(); // hide the list 
                         },
                       );
                     },
