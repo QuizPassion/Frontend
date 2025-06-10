@@ -136,6 +136,25 @@ flutter pub get
 flutter run
 ```
 
+### 9. Testing
+
+**Run All Tests**
+
+```bash
+flutter test
+```
+
+**Run Specific Test Files**
+
+```bash
+flutter test test/home_page_test.dart
+```
+
+**Expected output**
+```bash
+00:00 +1: All tests passed!
+```
+
 ---
 
 ## **Packages and Dependencies Used**
@@ -155,14 +174,6 @@ flutter run
 
 ---
 
-##  Customization and Development
-You can customize the app by editing:
-
-- ``api_service.dart`` for API calls (backend)
-- ``main.dart`` for frontend structure
-
----
-
 ##  **Troubleshooting**
 
 - **MySQL/Redis** : Make sure the services are running.
@@ -175,8 +186,4 @@ You can customize the app by editing:
 
 ---
 
-## **Lancement et Test**
 
-- Go Backend: ``localhost:<PORT>`` (default is 8080)
-
-- Flutter Frontend: run on a connected device or emulator
