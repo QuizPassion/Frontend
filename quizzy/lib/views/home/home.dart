@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> {
                 width: 350,
                 height: 42,
                 child: ElevatedButton.icon(
+                  key: const Key('create_game_button'),
                   onPressed: () {
                     Navigator.pushNamed(context, '/createdGameLobby');
                   },
