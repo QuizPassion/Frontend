@@ -21,7 +21,7 @@ class QuizCardGroup extends StatelessWidget {
           title,
           style: const TextStyle(
             fontFamily: AppFonts.lato,
-            fontSize: 18,
+            fontSize: 20,
             color: AppColors.lightGrey,
           ),
         ),

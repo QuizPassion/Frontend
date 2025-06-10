@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import '../../core/app_colors.dart';
-// import '../../core/app_fonts.dart';
-import '../../core/app_images.dart';
 
 class ProfileIcon extends StatelessWidget {
-  const ProfileIcon({super.key});
+  final String imageUrl;
+
+  const ProfileIcon({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.deepLavender,
-          width: 1,
-        ),
-      ),
-      child: Center(
-        child: Image.asset(
-          AppImages.profilePicture,
-          width: 68,
-          fit: BoxFit.contain,
-        ),
+    return ClipOval(
+      child: Image.network(
+        imageUrl,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.error, size: 80, color: Colors.red);
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

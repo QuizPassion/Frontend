@@ -6,11 +6,13 @@ import '../../core/app_fonts.dart';
 class SearchWithQrRow extends StatelessWidget {
   final String hintText;
   final VoidCallback onQrTap;
+  final TextEditingController controller;
 
   const SearchWithQrRow({
     super.key,
     required this.hintText,
     required this.onQrTap,
+    required this.controller,
   });
 
   @override
@@ -23,7 +25,7 @@ class SearchWithQrRow extends StatelessWidget {
             child: QuizzyTextField(
               hintText: hintText,
               height: 42, 
-              controller: TextEditingController(),
+              controller: controller,
             ),
           ),
           const SizedBox(width: 4),

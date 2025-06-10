@@ -3,37 +3,24 @@ import '/core/app_colors.dart';
 import '/core/app_fonts.dart';
 
 class QuestionData {
-  TextEditingController titleController;
+  String question;
   List<OptionData> options;
 
   QuestionData({
-    TextEditingController? titleController,
-    List<OptionData>? options,
-  })  : titleController = titleController ?? TextEditingController(),
-        options = options ?? [OptionData(), OptionData()];
-
-  QuestionData.clone(QuestionData original)
-      : titleController =
-            TextEditingController(text: original.titleController.text),
-        options = original.options.map((o) => OptionData.clone(o)).toList();
+    required this.question,
+    required this.options,
+  });
 }
-
 
 class OptionData {
-  bool isCorrect;  // Utilisation de isCorrect à la place de check1 et check2
-  TextEditingController textController;
+  bool isCorrect;
+  String text;
 
   OptionData({
-    this.isCorrect = false,  // initialisé à false
-    String text = '',
-  }) : textController = TextEditingController(text: text);
-
-  OptionData.clone(OptionData original)
-      : isCorrect = original.isCorrect,
-        textController =
-            TextEditingController(text: original.textController.text);
+    required this.isCorrect,
+    required this.text,
+  });
 }
-
 
 class CreateQuestionCard extends StatefulWidget {
   final QuestionData data;
@@ -52,9 +39,29 @@ class CreateQuestionCard extends StatefulWidget {
 }
 
 class _CreateQuestionCardState extends State<CreateQuestionCard> {
+  late TextEditingController _questionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionController = TextEditingController(text: widget.data.question);
+  }
+
+  @override
+  void dispose() {
+    _questionController.dispose();
+    super.dispose();
+  }
+
   void _addOption() {
     setState(() {
-      widget.data.options.add(OptionData());
+      widget.data.options.add(OptionData(isCorrect: false, text: ''));
+    });
+  }
+
+  void _removeOption(int index) {
+    setState(() {
+      widget.data.options.removeAt(index);
     });
   }
 
@@ -75,7 +82,10 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            controller: widget.data.titleController,
+            controller: _questionController,
+            onChanged: (value) {
+              widget.data.question = value;
+            },
             style: const TextStyle(
               color: AppColors.lightGrey,
               fontFamily: AppFonts.lato,
@@ -97,7 +107,7 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'True/False',
+            'Options',
             style: TextStyle(
               color: AppColors.lightGrey,
               fontFamily: AppFonts.lato,
@@ -105,8 +115,19 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
             ),
           ),
           const SizedBox(height: 4),
-          ...widget.data.options.map((option) => _OptionRow(data: option)),
+
+          // Liste des options
+          ...widget.data.options.asMap().entries.map((entry) {
+            final index = entry.key;
+            final option = entry.value;
+            return _OptionRow(
+              data: option,
+              onDelete: () => _removeOption(index),
+            );
+          }),
+
           const SizedBox(height: 4),
+
           GestureDetector(
             onTap: _addOption,
             child: const Text(
@@ -119,15 +140,15 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
               ),
             ),
           ),
+
           const SizedBox(height: 8),
 
-          // copy and delete
+          // Actions : copier / supprimer
           Align(
             alignment: Alignment.bottomRight,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ← REPLACE THIS IconButton
                 GestureDetector(
                   onTap: widget.onCopy,
                   child: Container(
@@ -145,7 +166,6 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // ← AND THIS IconButton
                 GestureDetector(
                   onTap: widget.onDelete,
                   child: Container(
@@ -173,21 +193,40 @@ class _CreateQuestionCardState extends State<CreateQuestionCard> {
 
 class _OptionRow extends StatefulWidget {
   final OptionData data;
+  final VoidCallback onDelete;
 
-  const _OptionRow({required this.data});
+  const _OptionRow({
+    required this.data,
+    required this.onDelete,
+  });
 
   @override
   State<_OptionRow> createState() => _OptionRowState();
 }
 
 class _OptionRowState extends State<_OptionRow> {
+  late TextEditingController _optionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _optionController = TextEditingController(text: widget.data.text);
+  }
+
+  @override
+  void dispose() {
+    _optionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Checkbox(
-          value: widget.data.isCorrect,  // Utilisation de isCorrect
-          onChanged: (val) => setState(() => widget.data.isCorrect = val ?? false),
+          value: widget.data.isCorrect,
+          onChanged: (val) =>
+              setState(() => widget.data.isCorrect = val ?? false),
           side: const BorderSide(color: AppColors.lightGrey, width: 1),
           checkColor: AppColors.anthraciteBlack,
           activeColor: AppColors.lightGrey,
@@ -195,7 +234,10 @@ class _OptionRowState extends State<_OptionRow> {
         const SizedBox(width: 8),
         Expanded(
           child: TextField(
-            controller: widget.data.textController,
+            controller: _optionController,
+            onChanged: (value) {
+              widget.data.text = value;
+            },
             style: const TextStyle(
               color: AppColors.lightGrey,
               fontFamily: AppFonts.lato,
@@ -212,6 +254,10 @@ class _OptionRowState extends State<_OptionRow> {
             ),
           ),
         ),
+        IconButton(
+          icon: const Icon(Icons.close, color: AppColors.deepLavender),
+          onPressed: widget.onDelete,
+        )
       ],
     );
   }

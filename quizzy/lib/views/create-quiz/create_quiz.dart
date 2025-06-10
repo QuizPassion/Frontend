@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:quizzy/core/app_colors.dart';
 import 'package:quizzy/core/app_fonts.dart';
 import 'package:quizzy/core/widgets/quizzy_text_field.dart';
 import 'package:quizzy/core/widgets/save_button.dart';
-import 'package:quizzy/data/provider/quiz_provider.dart';
 
 import '../../core/widgets/quizzy_scaffold.dart';
 
@@ -19,27 +17,55 @@ class CreateQuizPage extends StatefulWidget {
 }
 
 class _CreateQuizPageState extends State<CreateQuizPage> {
-  @override
-  void initState() {
-    super.initState();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String? selectedTheme;
+  File? imageFile;
+  bool isLoading = false;
 
-    // 🔁 Réinitialise les champs quand la page est ouverte
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<QuizProvider>(context, listen: false).reset();
-    });
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
   }
 
-  Future<void> _pickImage(BuildContext context) async {
+  Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      final image = File(pickedFile.path);
-      context.read<QuizProvider>().setImage(image);
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
     }
+  }
+
+  void _saveQuiz() {
+    if (nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Le nom du quiz est requis")),
+      );
+      return;
+    }
+
+    final quizData = {
+      'quiz_name': nameController.text,
+      'description': descriptionController.text,
+      'theme': selectedTheme,
+      'image': imageFile,
+    };
+
+    print('=== DONNÉES DU QUIZ ===');
+    print('Nom du quiz: ${nameController.text}');
+    print('Description: ${descriptionController.text}');
+    print('Thème: $selectedTheme');
+    print('Image: $imageFile');
+    print('=====================');
+
+    Navigator.pushNamed(context, '/createQuizQuestions', arguments: quizData);
   }
 
   @override
   Widget build(BuildContext context) {
-    final quizProvider = Provider.of<QuizProvider>(context);
 
     final List<String> themes = [
       'Science',
@@ -86,7 +112,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
 
               Center(
                 child: GestureDetector(
-                  onTap: () => _pickImage(context),
+                  onTap: () => _pickImage(),
                   child: Container(
                     width: 100,
                     height: 100,
@@ -95,8 +121,8 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                       border: Border.all(color: AppColors.deepLavender, width: 1),
                     ),
                     child: ClipOval(
-                      child: quizProvider.imageFile != null
-                          ? Image.file(quizProvider.imageFile!, fit: BoxFit.cover)
+                      child: imageFile != null
+                          ? Image.file(imageFile!, fit: BoxFit.cover)
                           : const Icon(Icons.add_a_photo, color: AppColors.deepLavender),
                     ),
                   ),
@@ -115,7 +141,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               const SizedBox(height: 8),
               QuizzyTextField(
                 hintText: 'Enter quiz name',
-                controller: quizProvider.quizNameController,
+                controller: nameController,
               ),
 
               const SizedBox(height: 24),
@@ -130,7 +156,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               const SizedBox(height: 8),
               QuizzyTextField(
                 hintText: 'Enter quiz description',
-                controller: quizProvider.descriptionController,
+                controller: descriptionController,
                 height: 108,
                 maxLines: 5,
                 minLines: 5,
@@ -147,7 +173,7 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
               ),
               const SizedBox(height: 8),
               DropdownButton<String>(
-                value: quizProvider.selectedTheme,
+                value: selectedTheme,
                 hint: const Text(
                   'Select a theme',
                   style: TextStyle(
@@ -173,28 +199,19 @@ class _CreateQuizPageState extends State<CreateQuizPage> {
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
-                  quizProvider.setTheme(newValue);
+                  setState(() {
+                    selectedTheme = newValue;
+                  });
                 },
               ),
 
               const SizedBox(height: 24),
               Center(
-                child: quizProvider.isLoading
+                child: isLoading
                     ? const CircularProgressIndicator(color: AppColors.deepLavender)
                     : SaveButton(
                         onPressed: () {
-                          final quizData = {
-                            'name': quizProvider.quizNameController.text,
-                            'description': quizProvider.descriptionController.text,
-                            'theme': quizProvider.selectedTheme,
-                            'image': quizProvider.imageFile,
-                          };
-
-                          Navigator.pushNamed(
-                            context,
-                            '/createQuizQuestions',
-                            arguments: quizData,
-                          );
+                          _saveQuiz();
                         },
                       ),
               ),

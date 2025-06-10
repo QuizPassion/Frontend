@@ -1,10 +1,12 @@
+import 'package:quizzy/data/model/image.dart';
+
 class User {
   final int id;
   final String userPseudo;
   final String email;
   final String password;
   final String role;
-  final Image image;
+  final ImageQ image;
 
   User({
     required this.id,
@@ -22,27 +24,27 @@ class User {
       email: json['Email'] ?? '', // Si Email est null, assigner une chaîne vide
       password: json['Password'] ?? '', // Si Password est null, assigner une chaîne vide
       role: json['Role'] ?? '', // Si Role est null, assigner une chaîne vide
-      image: Image.fromJson(json['Image']), // Assurez-vous de gérer l'objet Image séparément
+      image: ImageQ.fromJson(json['Image']), // Assurez-vous de gérer l'objet Image séparément
     );
   }
 }
 
-class Image {
-  final int id;
-  final String title;
-  final String url;
+class UserRoom {
+  final String userPseudo;
+  final ImageQ image;
+  final String userId;
 
-  Image({
-    required this.id,
-    required this.title,
-    required this.url,
+  UserRoom({
+    required this.userPseudo,
+    required this.image,
+    required this.userId,
   });
 
-  factory Image.fromJson(Map<String, dynamic> json) {
-    return Image(
-      id: json['ID'], // Si ID est null, assigner une valeur par défaut
-      title: json['title'] ?? '', // Si title est null, assigner une chaîne vide
-      url: json['url'], // Si url est null, assigner une chaîne vide
+  factory UserRoom.fromJson(Map<String, dynamic> json) {
+    return UserRoom(
+      userPseudo: json['user_pseudo'] ?? '', // Si user_pseudo est null, assigner une chaîne vide
+      image: ImageQ.fromJson(json['image']), // Assurez-vous de gérer l'objet Image séparément
+      userId: json['user_id'].toString(), // Si user_id est null, assigner une chaîne vide
     );
   }
 }
