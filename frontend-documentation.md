@@ -58,7 +58,6 @@ quizzy/
 │           └── widgets/
 │               └── parameter_card.dart
 ```
-<img src="documentation-img/folder-feature.png" alt="quizzy-logo" style="height:500px;" />
 
 ## Flutter Coding Standards
 
