@@ -21,7 +21,7 @@ Quizzy lets users test their knowledge, compete, and track their progress.
 
 ---
 
-## **Prerequisites**
+## **Prerequisites**  
 
 Before getting started, make sure the following tools are installed on your machine:
 
