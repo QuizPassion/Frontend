@@ -34,10 +34,16 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  // Fonction de validation de l'email
+  // email validation 
   bool _isEmailValid(String email) {
     final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
     return emailRegex.hasMatch(email);
+  }
+
+  bool _isPasswordValid(String password) {
+    // At least 8 characters, 1 uppercase, 1 number, 1 special character
+    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~_\-\^%+=.,:;?/\\|<>]).{8,}$');
+    return passwordRegex.hasMatch(password);
   }
 
   void _signUp() async {
@@ -55,6 +61,13 @@ class _SignUpPageState extends State<SignUpPage> {
     if (!_isEmailValid(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter a valid email")),
+      );
+      return;
+    }
+
+    if (!_isPasswordValid(password)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid password : \nAt least 8 characters, 1 uppercase letter, 1 number, and 1 special character.")),
       );
       return;
     }

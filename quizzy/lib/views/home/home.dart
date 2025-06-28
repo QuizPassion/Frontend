@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> {
           
         return roomId;
       } else {
+        print('réponse ${response.toString()}');
         _showError('Erreur ${response.statusCode} lors de la création de la session.');
         return '';
       }
@@ -131,27 +132,40 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     final code = _searchController.text;
-              //     print(code);
-              //       JoinGameSession(code).then((roomId) {
-              //         if (roomId.isNotEmpty) {
-              //           Navigator.pushNamed(context, '/joinedGameLobby', arguments: roomId);
-              //         }
-              //       });
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: AppColors.royalPurple,
-              //     padding: const EdgeInsets.symmetric(vertical: 12),
-              //   ),
-              //   child: const Text(
-              //     'temporary',
-              //     style: TextStyle(
-              //       color: AppColors.lightGrey
-              //     ),
-              //   ),
-              // ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: 120,
+                height: 42,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final code = _searchController.text;
+                    print(code);
+                    final roomId = await JoinGameSession(code);
+                    if (roomId.isNotEmpty) {
+                      Navigator.pushNamed(
+                        context,
+                        '/joinedGameLobby',
+                        arguments: roomId,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.royalPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), 
+                    ),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: const Center(                        
+                    child: Text(
+                      'Join game',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppColors.lightGrey),
+                    ),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 8),
               const Text(
                 'ou',
