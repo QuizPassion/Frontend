@@ -34,7 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  // Fonction de validation de l'email
+  // email validation 
   bool _isEmailValid(String email) {
     final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
     return emailRegex.hasMatch(email);
@@ -45,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~_\-\^%+=.,:;?/\\|<>]).{8,}$');
     return passwordRegex.hasMatch(password);
   }
-  
+
   void _signUp() async {
     final username = _usernameController.text.trim();
     final email = _emailController.text.trim();
