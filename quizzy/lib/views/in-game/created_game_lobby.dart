@@ -17,8 +17,6 @@ import 'package:cookie_jar/cookie_jar.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_fonts.dart';
-import '../../core/widgets/confirm_exit.dart';
-import '../../core/widgets/quizzy_scaffold.dart';
 import '../../core/widgets/quizzy_text_field.dart';
 import '../../core/widgets/search_with_qr.dart';
 import '../../data/network/api_service.dart';
@@ -60,9 +58,9 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     });
   }
 
-
   @override
   void dispose() {
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -81,26 +79,21 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
   }
 
   Future<String> _createGameSession() async {
-    setState(() => _isLoading = true);
     try {
       final response = await ApiService().createGameSession(code);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
         final data = response.data['room_id'];
-        final code = response.data['code'];
         final hostId = response.data['host_id'];
         final players = [
-          UserRoom(userPseudo: userProvider.user!.userPseudo, image: userProvider.user!.image, userId: userProvider.user!.id.toString())
+          UserRoom(
+            userPseudo: userProvider.user!.userPseudo,
+            image: userProvider.user!.image,
+            userId: userProvider.user!.id.toString(),
+          ),
         ];
-        final room = Room(
-          players: players,
-          id: data,
-          code: code,
-          hostId: hostId,
-        );
+        final room = Room(id: data, code: code, hostId: hostId, players: players);
         Provider.of<RoomProvider>(context, listen: false).setRoom(room);
-        print('Room ID: $data');
-        print('Session créée avec succès: $data');
         return data;
       } else {
         _showError('Erreur ${response.statusCode} lors de la création de la session.');
@@ -109,8 +102,6 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     } catch (e) {
       _showError('Erreur lors de la création de la session : $e');
       return '';
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
@@ -118,12 +109,11 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     final jwt = await _getJwtTokenFromCookies();
     if (jwt == null || jwt.isEmpty) {
       _showError('Erreur d\'authentification.');
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
       return;
     }
 
     final wsService = context.read<WebSocketService>();
-
     final url = 'ws://10.0.2.2:8080/api/v1/multiGame/ws?room_id=$roomId';
     final headers = {'Cookie': 'jwt_token=$jwt'};
 
@@ -140,7 +130,6 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
     return jwtCookie.value.isNotEmpty ? jwtCookie.value : null;
   }
 
-
   void _startGame() {
     final quizProvider = Provider.of<QuizProvider>(context, listen: false);
     if (quizProvider.quiz == null) {
@@ -148,7 +137,6 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
       return;
     }
 
-    // Fait une requête http pour démarrer le jeu
     ApiService().startGameSession(roomId, quizProvider.quiz!.id).then((response) {
       if (response.statusCode == 200 || response.statusCode == 201) {
         _showError('Game started successfully');
@@ -166,17 +154,13 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    final roomProvider = Provider.of<RoomProvider>(context);
+    final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     final countPlayers = roomProvider.room?.players.length ?? 0;
-    final players = roomProvider.room?.players ?? [];
-
 
     return QuizzyScaffold(
       currentIndex: 8,
-      onTap: (_) {
-      },
       disabled: true,
+      onTap: (_) {},
       body: Stack(
         children: [
           if (_isLoading)
@@ -186,6 +170,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Quiz title + logout
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -211,6 +196,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
+                // Search input
                 QuizzyTextField(
                   hintText: 'Search for a quiz',
                   controller: _searchController,
@@ -221,7 +207,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                   builder: (context, provider, _) {
                     final filteredQuizzes = provider.quizzes;
                     if (_searchController.text.isEmpty || filteredQuizzes.isEmpty) {
-                      return const SizedBox(); // Ne rien afficher si vide
+                      return const SizedBox();
                     }
 
                     final itemCount = filteredQuizzes.length;
@@ -287,23 +273,29 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
+
+                // ✅ Liste des joueurs - maintenant réactive
                 Expanded(
-                  child: GridView.count(
-                    physics: const BouncingScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1,
-                    children: players.map((player) {
-                      return PlayerInGameCard(
-                        playerName: player.userPseudo,
-                        playerAvatar: player.image.url,
+                  child: Consumer<RoomProvider>(
+                    builder: (context, roomProvider, _) {
+                      final players = roomProvider.room?.players ?? [];
+                      return GridView.count(
+                        physics: const BouncingScrollPhysics(),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1,
+                        children: players.map((player) {
+                          return PlayerInGameCard(
+                            playerName: player.userPseudo,
+                            playerAvatar: player.image.url,
+                          );
+                        }).toList(),
                       );
-                    }).toList(),
+                    },
                   ),
                 ),
 
-                // Bottom Fixed Area
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12),
@@ -319,11 +311,7 @@ class _CreatedGameLobbyPageState extends State<CreatedGameLobbyPage> {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
-                        StartGameButton(
-                          onPressed: () {
-                            _startGame();
-                          },
-                        ),
+                        StartGameButton(onPressed: _startGame),
                       ],
                     ),
                   ),
